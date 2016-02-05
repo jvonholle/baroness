@@ -8,7 +8,7 @@ using std::make_pair;
 
 typedef pair<pair<int,int>, pair<int,int> > moves;
 
-moves getMove(int pos)
+moves checkMap(int pos)
 {
 	map<int, moves> board;
 	board[0]= make_pair(make_pair(4,5),make_pair(-1,-1));
