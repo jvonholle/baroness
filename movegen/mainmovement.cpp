@@ -164,7 +164,7 @@ string nextMove(string orgi, int p, int sel, bool & keep, int side)
 //this generates all next move boards
 //right now it does both sides at once
 //uses functions nextMove
-void getBoards(std::vector<string> & boards)
+void getBoards(std::vector<string> & boards, int turn)
 {
     bool keep=false;
     int side;
@@ -184,6 +184,8 @@ void getBoards(std::vector<string> & boards)
             side=0;
         }
         
+        if((turn==0&&(boards[0][i]=='R'||boards[0][i]=='r'))||(turn==1&&(boards[0][i]=='B'||boards[0][i]=='b')))
+            continue;
         for(int j=0; j<4 ;++j)
         {
             
@@ -218,7 +220,7 @@ int main()
     while(!quit)
     {
         
-        getBoards(boards);
+        getBoards(boards, loop%2);
         
         cout<< "First: " <<boards[0] <<endl;
         for(int i=1;i<boards.size(); ++i)
