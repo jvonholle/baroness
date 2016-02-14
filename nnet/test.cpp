@@ -22,13 +22,15 @@ using std::sort;
 //quick and dirty to make sure everything compiles
 int main()
 {
-	std::random_device r;
-	std::default_random_engine e1(r());
-	std::uniform_int_distribution<int> uniform_dist(1, 6);
-	vector<vector<double>> test(3);
-	for(int i = 0; i<3; ++i)
-		for(int j = 0; j<i*10; ++j)
-			test[i].push_back(uniform_dist(e1));
+	
+	vector<vector<double > > test(4);
+	for(int i=0; i< 32; ++i)
+		test[0].push_back(i);
+	for(int i=0; i< 40; ++i)
+		test[1].push_back(i);
+	for(int i=0; i< 10; ++i)
+		test[2].push_back(i);
+	test[3].push_back(1);
 	string path;
 	cout<< "Output test filename: ";
 	cin >> path;
@@ -37,7 +39,7 @@ int main()
 	cout<<"Input test filename: ";
 	cin>> path;
 	
-	vector<vector<double>> test2=loadNet(path);
+	vector<vector<double> > test2=loadNet(path);
 	cout << "levels: " << test2.size() << endl;
 	for(size_t i = 0; i<test2.size(); ++i){
 		cout << test2[i].size() << endl;
@@ -47,10 +49,13 @@ int main()
 		cout << endl;
 	}
 	vector<string> test_strings(32);
+	for(int i = 0; i< 32; ++i)
+		test_strings[i]= "rRrRr_____________BRBBbbbb__Rrrr_b_bBB_RR_";
+
 	vector<pair<double, string> > butt;
 	butt = boardEval(test_strings, test2);
 	for(size_t i =0; i<butt.size(); ++i)
-		cout<<butt[i].first << endl;
+		cout<<butt[i].first <<" | " << butt[i].second<< endl;
 
 	writeNet(path, test2);
 	return 0;

@@ -1,5 +1,6 @@
 #include "nnet.h"
-
+#include <map>
+using std::map;
 #include <vector>
 using std::vector;
 #include <fstream>
@@ -114,8 +115,14 @@ double activate(const vector<double> & sum)
 //sets numbers in vector according to string
 void boardPos(vector<double> & numBoard, const string & board)
 {
+	map<char, double> pieces;
+	pieces['r']=1;
+	pieces['R']=1.5;
+	pieces['b']=-1;
+	pieces['B']= - 1.5;
+	pieces['_']= 0;
 	for(double i =0; i<32; ++i)
-		numBoard[i]=phi(i*3); 
+		numBoard[i]= pieces[board[i]]; 
 }
 	
 //funtion boardEval
@@ -149,8 +156,6 @@ vector<pair<double, string> > boardEval(vector<string> & boards ,vector<vector<d
 			for(size_t i = 1; i<nNet.size(); ++i)
 				for(size_t j = 0; j<nNet[i].size(); ++j){
 					nNet[i][j]=activate(nNet[i-1]);
-					if(nNet[i].size() == 1)
-						score=nNet[i][j];
 				}
 		rBoards[o].first=score;
 		rBoards[o].second=boards[o];
