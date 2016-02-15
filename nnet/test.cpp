@@ -59,9 +59,8 @@ int main()
 	vector<vector<double> > test;
 	string path;
 	vector<string> boardTest;
-	//Fill test vectors
-	boardTest = boardTestGen(1000000);
 	vector<pair<double, string> > rTest;
+	//Fill test vectors
 	//Prompt user for input
 //	cout << "Number of times to run boardEval: ";
 //	cin >> count;
@@ -69,18 +68,36 @@ int main()
 	cin >> path;
 	test = loadNet(path);
 	//Run and time loop
+	boardTest = boardTestGen(100);
 	auto b = steady_clock::now();		
-//	for(size_t i =0; i<count; ++i){
-		rTest = boardEval(boardTest, test);
-	//		if(i%1000 == 0){
-	//			cout << "Test number: " << i << endl;
-	//			for(size_t j =0; j<rTest.size(); ++j)
-	//				cout << rTest[j].first << " | " << rTest[j].second << endl;
-	//			}
-//	}
+	rTest = boardEval(boardTest, test);
 	auto e = steady_clock::now();
 	auto diff = e - b;
-	cout << "Time: " << std::chrono::duration<double> (diff).count() << endl;
+	cout << "Time 100: " << std::chrono::duration<double> (diff).count() << endl;
+	boardTest = boardTestGen(1000);
+	b = steady_clock::now();		
+	rTest = boardEval(boardTest, test);
+	e = steady_clock::now();
+	diff = e - b;
+	cout << "Time 1,000: " << std::chrono::duration<double> (diff).count() << endl;
+	boardTest = boardTestGen(10000);
+	b = steady_clock::now();		
+	rTest = boardEval(boardTest, test);
+	e = steady_clock::now();
+	diff = e - b;
+	cout << "Time 10,000: " << std::chrono::duration<double> (diff).count() << endl;
+	boardTest = boardTestGen(100000);
+	b = steady_clock::now();		
+	rTest = boardEval(boardTest, test);
+	e = steady_clock::now();
+	diff = e - b;
+	cout << "Time 100,000: " << std::chrono::duration<double> (diff).count() << endl;
+	boardTest = boardTestGen(1000000);
+	b = steady_clock::now();		
+	rTest = boardEval(boardTest, test);
+	e = steady_clock::now();
+	diff = e - b;
+	cout << "Time 1,000,000 boards: " << std::chrono::duration<double> (diff).count() << endl;
 		
 	return 0;
 }
