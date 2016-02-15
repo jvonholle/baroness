@@ -105,7 +105,7 @@ double activate(const vector<double> & sum)
 {
 	double rd =0;
 	for(size_t i = 0; i< sum.size(); ++i)
-		rd+= phi(sum[i]);
+		rd+= sum[i];
 	return rd;
 }
 
