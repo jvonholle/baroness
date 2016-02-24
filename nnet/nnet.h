@@ -1,35 +1,44 @@
-//function descriptions in source file (nnet.cpp)
 #ifndef NNET_H_INCLUDED
-#define NNET_H_INCLUDED
+#define NNET_H_INLCUDED
 
-#include <vector>
-using std::vector;
-#include <fstream>
-using std::ifstream;
-using std::ofstream;
-#include <string>
-using std::string;
-#include <chrono>
-using std::chrono::system_clock;
-#include <utility>
-using std::pair;
+
 #include <cstddef>
 using std::size_t;
-#include <queue>
-using std::priority_queue;
+#include <vector>
+using std::vector;
 
-bool writeNet(const string & path,const vector<vector<double> > & nNet);
+class neuralNet{
+public:
+    //Two param ctor
+    //levels:
+    //      a vector size_t's, stating the level layout eg: {32,40,10,1}
+    //weights:
+    //      a vector of doubles containing the weights for the net
+    neuralNet(const vector<size_t> & levels, const vector<double> & weights);
 
-vector<vector<double> > loadNet(const string & path);
+    //      **PUBLIC MEMBER FUNCTIONS**      \\
+    
+    //evaluate
+    //takes vector of doubles for level 0 input
+    //doubles a, b, c are constants for sigmoid function 
+    //returns double
+    double evaluate(const vector<double> & input, const double a = 1, const double b = 2, const double c = 0);
+    vector<size_t> getLevels(){
+        return levels_;}
 
-double phi(double x);
+private:
+    
+    struct node_{
+        vector<double> weights;
+        double value;
+    };
+   
+    void makeNodeLevels();
+    void setWeights(const vector<double> & weights);
 
-double activate(const vector<double> & sum);
+    vector<size_t> levels_;
+    vector<vector<node_> > nodeLevels_;
 
-void boardPos(vector<double> & numBoard, const string & board);
-
-//priority_queue<double, string> boardEval(const vector<string> boards, const vector<vector<double> > & nNet);
-
-vector<pair<double, string> > boardEval(vector<string> & boards ,vector<vector<double> > & nNet);
-
+};//END OF CLASS NNET
+//EOF
 #endif
