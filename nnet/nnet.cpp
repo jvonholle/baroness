@@ -9,7 +9,7 @@ using std::string;
 #include <stdexcept>
 using std::runtime_error;
 
-double sigmoid(double sum, const double a, double b, const double c){
+inline static double sigmoid(double sum, const double a, double b, const double c){
     if(b==0)
         b=1;
     if(sum < 0)

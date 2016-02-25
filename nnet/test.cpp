@@ -16,6 +16,7 @@ using std::map;
 
 vector<double> deString(string board){
     vector<double> rVec;
+
     for(size_t i = 0; i < 32; ++i)
        rVec.push_back(board[i]);
    return rVec;
