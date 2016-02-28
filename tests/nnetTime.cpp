@@ -72,4 +72,7 @@ int main(){
     cout << "evolve time: " << std::chrono::duration<double>(diff).count() << endl;
 
     neuralNet test2("output");
+
+    test2.evolve("outt", [&](double a){return a;});
+    test2.evaluate(deString(testboards[3]));
 }

@@ -24,18 +24,6 @@ inline static double sigmoid(double sum, const double a, double b, const double 
         return (a/(1.0+exp((sum*-1))))+c;
 }
 
-neuralNet::neuralNet(const vector<size_t> & levels, const vector<double> & weights):levels_(levels)
-{
-    if(levels_.size()<=0)
-        throw runtime_error("Need more levels!");
-
-    if(levels_.back()!=1)
-        throw runtime_error("Too many nodes in last level! Expected 1, got "+ std::to_string(levels_.back()) + "!");
-
-   makeNodeLevels();
-   setWeights(weights);
-}
-
 neuralNet::neuralNet(const string & path){
     vector<size_t> levels;
     vector<double> weights;
@@ -50,14 +38,36 @@ neuralNet::neuralNet(const string & path){
         loadnet >> temp;
         levels.push_back(temp);
     }
+    levels_ = levels;
     loadnet >> incount;
     for(size_t i = 0; i < incount; ++i){
         double temp;
         loadnet >> temp;
         weights.push_back(temp);
     }
-    neuralNet(levels, weights);
+
+    if(levels_.size()<=0)
+        throw runtime_error("Need more levels!");
+
+    if(levels_.back()!=1)
+        throw runtime_error("Too many nodes in last level! Expected 1, got "+ std::to_string(levels_.back()) + "!");
+
+   makeNodeLevels();
+   setWeights(weights);
 }
+
+neuralNet::neuralNet(const vector<size_t> & levels, const vector<double> & weights):levels_(levels)
+{
+    if(levels_.size()<=0)
+        throw runtime_error("Need more levels!");
+
+    if(levels_.back()!=1)
+        throw runtime_error("Too many nodes in last level! Expected 1, got "+ std::to_string(levels_.back()) + "!");
+
+   makeNodeLevels();
+   setWeights(weights);
+}
+
 
 double neuralNet::evaluate(const vector<double> & input, const double a, const double b, const double c){
     for(size_t i = 0; i < nodeLevels_[0].size(); ++i)
