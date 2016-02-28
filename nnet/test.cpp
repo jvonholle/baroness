@@ -13,6 +13,9 @@ using std::string;
 using std::chrono::steady_clock;
 #include <map>
 using std::map;
+#include <utility>
+using std::pair;
+using std::make_pair;
 
 vector<double> deString(string board){
     vector<double> rVec;
@@ -61,4 +64,12 @@ int main(){
     auto e = steady_clock::now();
     auto diff = e-b;
     cout << "time: " << std::chrono::duration<double>(diff).count() << endl;
+
+    b = steady_clock::now();
+    tester.evolve("output", [&](double a){return a;});
+    e = steady_clock::now();
+    diff = e-b;
+    cout << "evolve time: " << std::chrono::duration<double>(diff).count() << endl;
+
+    neuralNet test2("output");
 }

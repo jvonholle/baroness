@@ -6,6 +6,10 @@
 using std::size_t;
 #include <vector>
 using std::vector;
+#include <string>
+using std::string;
+#include <functional>
+using std::function;
 
 class neuralNet{
 public:
@@ -16,6 +20,13 @@ public:
     //      a vector of doubles containing the weights for the net
     neuralNet(const vector<size_t> & levels, const vector<double> & weights);
 
+    //One param ctor
+    //path:
+    //    file path to network to load
+    //throws if file cannot be opened
+    //strong guarantee
+    neuralNet(const string & path);
+
     //      **PUBLIC MEMBER FUNCTIONS**      \\
     
     //evaluate
@@ -23,6 +34,18 @@ public:
     //doubles a, b, c are constants for sigmoid function 
     //returns double
     double evaluate(const vector<double> & input, const double a = 1, const double b = 2, const double c = 0);
+    //evolve
+    //takes a string and a function
+    //returns nothing
+    //runs the function on weights in current net
+    //saves to given filepath
+    //throws if file cannot be opened
+    //strong guarantee
+    void evolve(const string & path, function<double(double)> evolver);
+
+    //getLevels
+    //takes nothing
+    //returns levels
     vector<size_t> getLevels(){
         return levels_;}
 

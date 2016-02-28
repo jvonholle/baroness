@@ -6,8 +6,14 @@
 using std::exp;
 #include <string>
 using std::string;
+using std::getline;
 #include <stdexcept>
 using std::runtime_error;
+#include <fstream>
+using std::ifstream;
+using std::ofstream;
+#include <functional>
+using std::function;
 
 inline static double sigmoid(double sum, const double a, double b, const double c){
     if(b==0)
@@ -30,6 +36,29 @@ neuralNet::neuralNet(const vector<size_t> & levels, const vector<double> & weigh
    setWeights(weights);
 }
 
+neuralNet::neuralNet(const string & path){
+    vector<size_t> levels;
+    vector<double> weights;
+    size_t incount;
+    ifstream loadnet(path.c_str());
+    if(!loadnet)
+        throw runtime_error("file not found");
+
+    loadnet >> incount;
+    for(size_t i = 0; i < incount; ++i){
+        size_t temp;
+        loadnet >> temp;
+        levels.push_back(temp);
+    }
+    loadnet >> incount;
+    for(size_t i = 0; i < incount; ++i){
+        double temp;
+        loadnet >> temp;
+        weights.push_back(temp);
+    }
+    neuralNet(levels, weights);
+}
+
 double neuralNet::evaluate(const vector<double> & input, const double a, const double b, const double c){
     for(size_t i = 0; i < nodeLevels_[0].size(); ++i)
         nodeLevels_[0][i].value = input[i];
@@ -45,6 +74,30 @@ double neuralNet::evaluate(const vector<double> & input, const double a, const d
        }
 
        return nodeLevels_[nodeLevels_.size()-1][0].value;
+}
+
+void neuralNet::evolve(const string & path, function<double(double)> evolver){
+   ofstream writeNet(path.c_str());
+   if(!writeNet)
+      throw runtime_error("invalid filename");
+   
+   writeNet << levels_.size() << '\n';
+   for(size_t i = 0; i < levels_.size(); ++i)
+      writeNet << levels_[i] << " ";
+   writeNet << '\n';
+
+    vector<double*> realWeights;
+
+    for(auto & level:nodeLevels_)
+        for(auto & node:level)
+            for(auto & weight:node.weights)
+                realWeights.push_back(&weight);
+
+   writeNet << realWeights.size() << '\n';
+   for(size_t i = 0; i < realWeights.size(); ++i)
+      writeNet << evolver(*realWeights[i]) << " ";
+
+  writeNet.close(); 
 }
 
 void neuralNet::makeNodeLevels(){
@@ -74,7 +127,6 @@ void neuralNet::makeNodeLevels(){
 
 void neuralNet::setWeights(const vector<double> & weights){
     vector<double*> realWeights;
-
     for(auto & level:nodeLevels_)
         for(auto & node:level)
             for(auto & weight:node.weights)
