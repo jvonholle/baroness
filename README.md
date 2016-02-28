@@ -5,7 +5,7 @@ Thinking-Machine Super-Computer
 <h6> nettest - compiles timing test for 1 milion boards through the BEF </h6>
 <h6> nntestop - compiles optimized NNet time test</h6>
 <h6> nntestunop - compiles unoptimized NNet time test</h6>
-<h6> testmove - compiles interactive movegen check</h6>p
+<h6> testmove - compiles interactive movegen check</h6>
 <h6> catch - compiles catch check for values output by NNet </h6>
 <h6> main - compiles player mode</h6>
 <h6> train - compiles tournement training mode</h6>
