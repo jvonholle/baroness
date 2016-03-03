@@ -9,9 +9,7 @@ using std::string;
 #include <utility>
 using std::pair;
 
-#include "movement.h"
-#include "checkers_client.hpp"
-#include "checkers.hpp"
+#include "../src/movement.h"
 
 
 
@@ -35,8 +33,7 @@ int main()
     while(!quit)
     {
         
-        getBoards(boards, loop%2);
-        
+        getBoardsN(boards, loop%2);        
         cout<< "First: " <<boards[0] <<endl;
         for(int i=1;i<boards.size(); ++i)
             cout<<boards[i] <<endl;

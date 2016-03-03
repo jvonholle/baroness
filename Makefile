@@ -1,4 +1,4 @@
-all: main
+all: play
 nettest: nntestop
 
 #Tests
@@ -11,8 +11,8 @@ testmove: tests/moveTest.cpp
 catch: tests/valueCheck.cpp
 	g++ -std=c++11 tests/catch.hpp tests/valueCheck.cpp src/nnet.h src/nnet.cpp -o baroness
 #Play checkers
-main: src/play.cpp
-	g++ -std=c++11 src/nnet.cpp src/nnet.h src/movement.cpp src/movecheck.h src/movement.h src/play.cpp -o baroness
+play: src/player.cpp
+	g++ -std=c++11 src/nnet.cpp src/nnet.h src/movement.cpp src/movecheck.h src/movement.h src/player.cpp -o baroness
 train: src/train.cpp
 	g++ -std=c++11 src/nnet.cpp src/nnet.h src/movement.cpp src/movecheck.h src/movement.h src/train.cpp -o baroness
 

@@ -34,6 +34,8 @@ public:
     //doubles a, b, c are constants for sigmoid function 
     //returns double
     double evaluate(const vector<double> & input, const double a = 1, const double b = 2, const double c = 0);
+    double evaluate(const vector<double> & input, const double a = 1, const double b = 2, const double c = 0) const{
+        evaluate(input, a,b,c);}
     //evolve
     //takes a string and a function
     //returns nothing

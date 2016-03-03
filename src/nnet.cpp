@@ -85,7 +85,6 @@ double neuralNet::evaluate(const vector<double> & input, const double a, const d
 
        return nodeLevels_[nodeLevels_.size()-1][0].value;
 }
-
 void neuralNet::evolve(const string & path, function<double(double)> evolver){
    ofstream writeNet(path.c_str());
    if(!writeNet)
