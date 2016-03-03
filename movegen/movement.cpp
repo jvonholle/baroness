@@ -4,6 +4,7 @@
 //
 
 #include "movement.h"
+#include "movecheck.h"
 #include <string>
 #include <vector>
 

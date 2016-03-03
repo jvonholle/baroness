@@ -3,7 +3,7 @@
 #ifndef JSON_HPP
 #define JSON_HPP
 
-#include <jsoncpp/json.h>
+#include "json.h"
 #include <string>
 #include <vector>
 

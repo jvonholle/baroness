@@ -1,14 +1,14 @@
 #include "checkers_client.hpp"
 
-#include <json/json.hpp>
-#include <mongoose/mongoose.h>
+#include "json.hpp"
+#include "mongoose.h"
 
 struct wget_t
 {
 	std::string data;
 	std::string error;
 	bool done;
-};
+};  
 
 static inline void wget_ev_handler(mg_connection* connection,int ev,void* ev_data)
 {
