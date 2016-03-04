@@ -11,20 +11,16 @@
 #include <utility>
 
 
-
-//this may be misleading right now
-typedef std::pair<int,std::string> bo; // used for boards with weights
-
 //cSpaceN
 //checks a position on a board to make sure its open
 // takes an int pos: the position to check
-bool cSpaceN(const bo & board, int pos);
+bool cSpaceN(const std::string & board, int pos);
 
 //cJumpN
 //takes 2 ints mPos: the position of the current peice
 //  ePos: position of enemy to jump
 //retunrs true if the jump can be made
-bool cJumpN(const bo & board, int mPos, int ePos);
+bool cJumpN(const std::string & board, int mPos, int ePos);
 
 //mBoards
 //takes a bo type board, int pos, int side , int di , and optional bool j
@@ -43,7 +39,7 @@ bool cJumpN(const bo & board, int mPos, int ePos);
 //bool j is a flag that is set to true if the function call is after a jump
 //
 //retunrs a bo type that contains a board that has a move
-bo mBoards(bo board,int pos, int side, int di ,bool j);
+std::pair<int, std::string> mBoards(std::string board,int pos, int side, int di, int score, bool j);
 
 //getBoardsN
 //takes a vector<bo> boards and int turn
@@ -51,7 +47,7 @@ bo mBoards(bo board,int pos, int side, int di ,bool j);
 //int turn limits the peices that move
 //      turn == 0 blacks turn
 //      turn == 1 reds turn
-std::vector<bo> getBoardsN(std::vector<bo> boards, int turn);
+std::vector<std::string> getBoardsN(std::vector<std::string> boards, int turn);
 
 
 

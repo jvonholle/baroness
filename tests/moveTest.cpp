@@ -9,9 +9,7 @@ using std::string;
 #include <utility>
 using std::pair;
 
-#include "../src/movement.h"
-
-
+#include "movement.h"
 
 
 
@@ -32,8 +30,7 @@ int main()
     
     while(!quit)
     {
-        
-        getBoardsN(boards, loop%2);        
+        boards = getBoardsN(boards, loop%2);
         cout<< "First: " <<boards[0] <<endl;
         for(int i=1;i<boards.size(); ++i)
             cout<<boards[i] <<endl;
