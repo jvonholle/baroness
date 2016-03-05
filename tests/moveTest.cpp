@@ -10,8 +10,12 @@ using std::string;
 using std::pair;
 #include <stdexcept>
 
+<<<<<<< HEAD
 #include <time.h>
 #include <cstdlib>
+=======
+#include "movement.h"
+>>>>>>> 1cde3bb1466557a51f18ca6f0bd106d8da41f8b6
 
 //#include "checkers.hpp"
 //#include "checkers_client.hpp"
@@ -70,8 +74,32 @@ int main()
     
     for(int i=1; i<boards.size(); ++i)
     {
+<<<<<<< HEAD
         cout<<i <<" "<<boards[i].first <<" : " <<boards[i].second <<endl;
         //cout<<boards[i].second <<endl;
+=======
+        boards = getBoardsN(boards, loop%2);
+        cout<< "First: " <<boards[0] <<endl;
+        for(int i=1;i<boards.size(); ++i)
+            cout<<boards[i] <<endl;
+        cout <<boards.size()-1 <<endl;
+        
+        cout<<" pick an index or 0 to quit" <<endl;
+        
+        
+        cin >> pick;
+        if(pick>boards.size()||pick<=0)
+        {
+            quit=true;
+        }else{
+            board = boards[pick];
+            boards.clear();
+            boards.push_back(board);
+            game.push_back(board);
+        }
+        
+        ++loop;
+>>>>>>> 1cde3bb1466557a51f18ca6f0bd106d8da41f8b6
     }
     cout <<"done" <<endl;
 //    while(!quit)
