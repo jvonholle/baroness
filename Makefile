@@ -16,5 +16,6 @@ play: src/player.cpp
 train: src/train.cpp
 	g++ -std=c++11 src/nnet.cpp src/nnet.h src/movement.cpp src/movecheck.h src/movement.h src/train.cpp -o baroness
 
+.PHONY: clean
 clean:
 	rm baroness */*.gch output
