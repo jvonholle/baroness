@@ -8,6 +8,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <utility>
 
 typedef pair<int,std::string> bo; // used for boards with weights
 
