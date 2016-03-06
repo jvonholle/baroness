@@ -19,6 +19,18 @@ bool cSpaceN(const std::string & board, int pos)
     return true;
 }
 
+void cKingN(std::string & board){
+    for(int i = 0; i < 32; ++i){
+        if(i >= 0 && i < 4 ){
+            if(board[i] = 'b')
+                board[i] = 'B';
+        }else if(i>= 26 && i < 32){
+            if(board[i] = 'r')
+                board[i] = 'R';
+        }
+    }
+}
+
 bool cJumpN(const std::string & board, int mPos, int ePos)
 {
     if(checkMap(mPos).first.first == ePos)
@@ -153,6 +165,8 @@ std::vector<std::string> getBoardsN(std::vector<std::string> boards, int turn=0)
             }
         }
     }
+    for(int i = 0; i< boards.size(); ++i)
+        cKingN(boards[i]);
     return boards;
 }
 

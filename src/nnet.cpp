@@ -1,7 +1,8 @@
 //source file for nnet.h
 //all definitions in header file
 #include "nnet.h"
-
+#include "movement.h"
+//#include "alphbeta.h"
 #include <cmath>
 using std::exp;
 #include <string>
@@ -14,6 +15,32 @@ using std::ifstream;
 using std::ofstream;
 #include <functional>
 using std::function;
+#include <utility>
+using std::pair;
+using std::make_pair;
+#include <algorithm>
+
+
+//debug -- remove later --
+#include <iostream>
+using std::cout;
+using std::endl;
+//end debug
+
+vector<double> deString(string board, double king = 1.5){
+    vector<double> rvec;
+    for(int i = 0; i < 32; ++i){
+        switch(board[i]){
+            case 'r' : rvec.push_back(1); break;
+            case 'b' : rvec.push_back(-1); break;
+            case 'R' : rvec.push_back(king); break;
+            case 'B' : rvec.push_back(king * -1); break;
+            case '_' : rvec.push_back(0); break;
+            default : cout << "DEFAULT!!!!" << endl;
+        }
+    }
+    return rvec;
+}
 
 inline static double sigmoid(double sum, const double a, double b, const double c){
     if(b==0)
@@ -107,6 +134,26 @@ void neuralNet::evolve(const string & path, function<double(double)> evolver){
       writeNet << evolver(*realWeights[i]) << " ";
 
   writeNet.close(); 
+}
+
+string neuralNet::go(const string & board, bool red){
+
+    //      CALLS TO ALPHA BETA GO HERE      \\
+    
+    vector<pair<double, string> > weighedBoards;
+    vector<string> pboard = {board};
+    vector<string> boards;
+    if(red)
+        boards = getBoardsN(pboard, 1);
+    else
+        boards = getBoardsN(pboard, 0);
+
+    for(int i = 0; i < boards.size(); ++i)
+        weighedBoards.push_back(make_pair(evaluate(deString(boards[i])),boards[i]));
+    cout << "boards evaled" << endl;
+    std::sort(weighedBoards.begin()+1, weighedBoards.end());
+    cout << weighedBoards.size() << endl;
+    return weighedBoards[1].second;
 }
 
 void neuralNet::makeNodeLevels(){

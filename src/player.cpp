@@ -1,48 +1,52 @@
 #include "player.h"
+
 #include <utility>
 using std::pair;
 using std::make_pair;
-#include <string>
-using std::string;
 #include <vector>
 using std::vector;
-#include <algorithm>
-using std::sort;
+#include <string>
+using std::string;
+#include <iostream>
+using std::cout;
+using std::endl;
 
-vector<ratedBoard> weighBoards(const neuralNet & player, const vector<bo> & boards){
-    vector<ratedBoard> ratedBoards;
-    for(size_t i = 0; i < boards.size(); ++i)
-        ratedBoards.push_back(make_pair(boards[i], player.evaluate(boards[i].second)));
-    return ratedBoards;
+bool win(string board, char turn){
+    int count = 0;
+    for(int i = 0; i < 32; ++i)
+        if(board[i] == turn || board[i] == turn-34)
+            count++;
+    cout << "win called: " <<  (count == 0) << endl;
+    return (count == 0);    
 }
 
-vector<bo> pickMove(const vector<ratedBoard> & boards, const int depth = 8){
-    sort(boards.begin(), boards.end(),
-            [=](size_t i1, size_t i2)
-            {return boards[i1].second > boards[i2].second;});
-    return({make_pair(1,boards[0].first)});
+int p_count(string board, char turn){
+    cout << "pcount called" << endl;
+    int count = 0;
+    for(int i = 0; i < 32; ++i)
+        if(board[i] == turn || board[i] == turn-34)
+            count++;
+    return count;
 }
 
-int play(const neuralNet & red, const nerualNet & black, const vector<string> startBoard ={"rrrrrrrrrrrr________bbbbbbbbbbbb"}, const int turns = 100){
-    t_count = 0;
-    vector<bo> boards = getBoardsN(startBoard, 0);
-    vector<bo> game;
-    vector<ratedBoard> redBoards;
-    vector<ratedBoard> blackBoards;
-    game.push_back(startBoard[0]);
+
+int play(neuralNet & red, neuralNet & black, const int turns, const string startB){
+    int t_count = 0;
+    vector<string> game;
+    game.push_back(startB);
+    cout << "game start" << endl;
     while(t_count < turns){
-        redBoards = weighBoards(red, boards);
-
-        blackBoards = weighBoards(black, boards);
-
+        game.push_back(red.go(game[t_count], true));
+        cout << "red go called" << endl;
+        if(win(game[t_count], 'r'))
+            return p_count(game[t_count], 'r');
+        t_count++;
+        game.push_back(black.go(game[t_count], false)); 
+        cout << "black go called" << endl;
+        if(win(game[t_count], 'b'))
+            return p_count(game[t_count], 'b') * -1;
         t_count++;
     }
-    return 0;
-}
-
-int main(){
-    neuralNet p1({1,1}, {1});
-    neuralNet p2({1,1}, {1});
-
-    return play(p1, p2);
+    cout << "draw!" << endl;
+    return (p_count(game[t_count], 'r') - p_count(game[t_count], 'b'));
 }

@@ -1,7 +1,6 @@
 #ifndef NNET_H_INCLUDED
 #define NNET_H_INLCUDED
 
-
 #include <cstddef>
 using std::size_t;
 #include <vector>
@@ -34,8 +33,7 @@ public:
     //doubles a, b, c are constants for sigmoid function 
     //returns double
     double evaluate(const vector<double> & input, const double a = 1, const double b = 2, const double c = 0);
-    double evaluate(const vector<double> & input, const double a = 1, const double b = 2, const double c = 0) const{
-        evaluate(input, a,b,c);}
+
     //evolve
     //takes a string and a function
     //returns nothing
@@ -50,6 +48,12 @@ public:
     //returns levels
     vector<size_t> getLevels(){
         return levels_;}
+
+    //go
+    //takes a string
+    //returns a string
+    //evaluates and alpha betas its way to the best move then returns that
+    string go(const string & board, bool red);
 
 private:
     
