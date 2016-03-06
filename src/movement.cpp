@@ -22,10 +22,10 @@ bool cSpaceN(const std::string & board, int pos)
 void cKingN(std::string & board){
     for(int i = 0; i < 32; ++i){
         if(i >= 0 && i < 4 ){
-            if(board[i] = 'b')
+            if(board[i] == 'b')
                 board[i] = 'B';
-        }else if(i>= 26 && i < 32){
-            if(board[i] = 'r')
+        }else if(i>= 28 && i < 32){
+            if(board[i] == 'r')
                 board[i] = 'R';
         }
     }

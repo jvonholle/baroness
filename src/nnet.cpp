@@ -150,9 +150,7 @@ string neuralNet::go(const string & board, bool red){
 
     for(int i = 0; i < boards.size(); ++i)
         weighedBoards.push_back(make_pair(evaluate(deString(boards[i])),boards[i]));
-    cout << "boards evaled" << endl;
     std::sort(weighedBoards.begin()+1, weighedBoards.end());
-    cout << weighedBoards.size() << endl;
     return weighedBoards[1].second;
 }
 

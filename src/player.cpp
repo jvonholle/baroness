@@ -16,12 +16,10 @@ bool win(string board, char turn){
     for(int i = 0; i < 32; ++i)
         if(board[i] == turn || board[i] == turn-34)
             count++;
-    cout << "win called: " <<  (count == 0) << endl;
     return (count == 0);    
 }
 
 int p_count(string board, char turn){
-    cout << "pcount called" << endl;
     int count = 0;
     for(int i = 0; i < 32; ++i)
         if(board[i] == turn || board[i] == turn-34)
@@ -34,19 +32,17 @@ int play(neuralNet & red, neuralNet & black, const int turns, const string start
     int t_count = 0;
     vector<string> game;
     game.push_back(startB);
-    cout << "game start" << endl;
     while(t_count < turns){
         game.push_back(red.go(game[t_count], true));
-        cout << "red go called" << endl;
         if(win(game[t_count], 'r'))
             return p_count(game[t_count], 'r');
+        cout << game[t_count] << endl;
         t_count++;
         game.push_back(black.go(game[t_count], false)); 
-        cout << "black go called" << endl;
         if(win(game[t_count], 'b'))
             return p_count(game[t_count], 'b') * -1;
+        cout << game[t_count] << endl;
         t_count++;
     }
-    cout << "draw!" << endl;
     return (p_count(game[t_count], 'r') - p_count(game[t_count], 'b'));
 }
