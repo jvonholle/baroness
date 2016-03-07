@@ -14,16 +14,15 @@ using std::endl;
 bool win(string board, char turn){
     int count = 0;
     for(int i = 0; i < 32; ++i)
-        if(board[i] == turn || board[i] == turn-34)
+        if(board[i] == turn || board[i] == turn-32)
             count++;
     return (count == 0);    
 }
 
 int p_count(string board, char turn){
-    cout << "p_cout called" << endl;
     int count = 0;
     for(int i = 0; i < 32; ++i)
-        if(board[i] == turn || board[i] == turn-34)
+        if(board[i] == turn || board[i] == turn-32)
             count++;
     return count;
 }
@@ -33,21 +32,27 @@ int play(neuralNet & red, neuralNet & black, const int turns, const string start
     int t_count = 0;
     vector<string> game;
     game.push_back(startB);
+    
     while(t_count < turns){
-        game.push_back(red.go(game[t_count], true));
-        if(win(game[t_count], 'r')){
-            cout << "red wins!" << endl;
-            return p_count(game[t_count], 'r') * 3;
-        }
-        cout << game[t_count] << endl;
-        t_count++;
-        game.push_back(black.go(game[t_count], false)); 
-        if(win(game[t_count], 'b')){
+        auto temp = red.go(game[t_count], true);
+        if(temp.second){
+            game.push_back(temp.first);
+            t_count++;
+            cout << game[t_count] << endl;
+        }else{
             cout << "black wins" << endl;
-            return p_count(game[t_count], 'b') * -5;
+            return (p_count(game[t_count], 'b') * -5);
         }
-        cout << game[t_count] << endl;
-        t_count++;
+        temp = black.go(game[t_count], false);
+        if(temp.second){
+            game.push_back(temp.first);
+            t_count++;
+            cout << game[t_count] << endl;
+        }else{
+            cout << "red wins" << endl;
+            return (p_count(game[t_count], 'r') * 3);
+        }
     }
+    cout << "draw!" << endl;
     return (p_count(game[t_count], 'r') - p_count(game[t_count], 'b'));
 }

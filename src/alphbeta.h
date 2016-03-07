@@ -97,9 +97,9 @@ struct node{
             return "bad";
         }
         else{
-            std::cout <<"enter best move" <<std::endl;
+            //std::cout <<"enter best move" <<std::endl;
             top=children[0]->w;
-            std::cout << "top" <<top <<std::endl;
+            //std::cout << "top" <<top <<std::endl;
         }
         for(int i=1; i<children.size(); ++i)
         {
@@ -125,7 +125,7 @@ void build(node* root, int depth, neuralNet& nn1, int move=1)
     for(int j=0; j<moves.size(); ++j)
     {
         w = nn1.evaluate(toDubb(moves[j], true, 1.5));
-        std::cout <<w <<moves[j] <<std::endl;
+       // std::cout <<w <<moves[j] <<std::endl;
         root->birth(moves[j]);
         root->children[j]->w=w;
     }
@@ -144,7 +144,7 @@ std::string absearch(node* root, int depth, bool side, neuralNet& nn) //add nura
     ab(root, depth, -100000, 100000, true, true, nn);
     for(int i=0; i<root->children.size();++i)
     {
-        std::cout<< root->children[i]->w <<std::endl;
+        //std::cout<< root->children[i]->w <<std::endl;
     }
     return root->bestMove();
 }
@@ -161,7 +161,7 @@ double ab(node* root,int depth, double a, double b, bool maximize, bool side, ne
         v=-10000;
         for(int i=0; i<root->children.size(); ++i)
         {
-            std::cout<< "LOOOOOOOP"<<root->children[i]->move <<std::endl;
+            //std::cout<< "LOOOOOOOP"<<root->children[i]->move <<std::endl;
             v=max(v, ab(root->children[i], depth-1, a, b, false, side, nn));
             a=max(a,v);
             if(b<=a)
@@ -177,7 +177,7 @@ double ab(node* root,int depth, double a, double b, bool maximize, bool side, ne
         v=10000;
         for(int i=0; i<root->children.size();++i)
         {
-            std::cout<< "LOOP"<<root->children[i]->move  <<std::endl;
+            //std::cout<< "LOOP"<<root->children[i]->move  <<std::endl;
             v=min(v, ab(root->children[i], depth-1, a, b, true, side, nn));
             b=min(b, v);
             if(b<=a)

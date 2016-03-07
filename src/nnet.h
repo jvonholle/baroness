@@ -9,6 +9,8 @@ using std::vector;
 using std::string;
 #include <functional>
 using std::function;
+#include <utility>
+using std::pair;
 
 class neuralNet{
 public:
@@ -53,7 +55,7 @@ public:
     //takes a string
     //returns a string
     //evaluates and alpha betas its way to the best move then returns that
-    string go(const string & board, bool red);
+    pair<string, bool> go(const string & board, bool red);
 
 private:
     

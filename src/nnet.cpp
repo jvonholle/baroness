@@ -1,8 +1,8 @@
 //source file for nnet.h
 //all definitions in header file
-#include "nnet.h"
-#include "movement.h"
-//#include "alphbeta.h"
+//#include "nnet.h"
+//#include "movement.h"
+#include "alphbeta.h"
 #include <cmath>
 using std::exp;
 #include <string>
@@ -136,9 +136,13 @@ void neuralNet::evolve(const string & path, function<double(double)> evolver){
   writeNet.close(); 
 }
 
-string neuralNet::go(const string & board, bool red){
+pair<string,bool> neuralNet::go(const string & board, bool red){
 
     //      CALLS TO ALPHA BETA GO HERE      \\
+    
+    /*node * passer;
+    passer = new node(board);
+    return absearch(passer,5, red, *this);*/
     
     vector<pair<double, string> > weighedBoards;
     vector<string> pboard = {board};
@@ -150,9 +154,13 @@ string neuralNet::go(const string & board, bool red){
 
     for(int i = 1; i < boards.size(); ++i)
         weighedBoards.push_back(make_pair(evaluate(deString(boards[i])),boards[i]));
-
-    std::sort(weighedBoards.begin(), weighedBoards.end());
-    return weighedBoards[0].second;
+        
+    if(weighedBoards.size() > 0){
+        std::sort(weighedBoards.begin(), weighedBoards.end());
+        return make_pair(weighedBoards[0].second, true);
+    }else{
+        return make_pair("end", false);
+    }
 }
 
 void neuralNet::makeNodeLevels(){

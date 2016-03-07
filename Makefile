@@ -14,7 +14,7 @@ catch: tests/valueCheck.cpp
 train: src/train.cpp
 	g++ -std=c++11 src/movement.cpp src/movement.h src/nnet.cpp src/nnet.h src/player.cpp src/player.h src/tourney.cpp src/tourney.h src/train.cpp -o baroness
 trainop: src/train.cpp
-	g++ -O3 -Ofast -std=c++11 src/movement.cpp src/movement.h src/nnet.cpp src/nnet.h src/player.cpp src/player.h src/tourney.cpp src/tourney.h src/train.cpp -o baroness
+	g++ -O3 -Ofast -std=c++11 src/movement.cpp src/movement.h src/nnet.cpp src/nnet.h src/player.cpp src/player.h src/tourney.cpp src/tourney.h src/train.cpp src/alphbeta.cpp src/alphbeta.h -o baroness
 
 .PHONY: clean
 clean:
