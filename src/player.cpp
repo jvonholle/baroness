@@ -11,12 +11,14 @@ using std::string;
 using std::cout;
 using std::endl;
 
-bool win(string board, char turn){
-    int count = 0;
-    for(int i = 0; i < 32; ++i)
-        if(board[i] == turn || board[i] == turn-32)
-            count++;
-    return (count == 0);    
+void printB(string board){
+    for(int i = 1; i < 9; ++i){
+        cout << "|";
+        for(int j = 1; j < 5; ++j){
+            cout << "_|"<<board[(i*j)-1] << "|";
+        }
+        cout << endl;
+    }
 }
 
 int p_count(string board, char turn){
@@ -38,7 +40,8 @@ int play(neuralNet & red, neuralNet & black, const int turns, const string start
         if(temp.second){
             game.push_back(temp.first);
             t_count++;
-            cout << game[t_count] << endl;
+            cout << "red move:" << endl;
+            printB(game[t_count]);
         }else{
             cout << "black wins" << endl;
             return (p_count(game[t_count], 'b') * -5);
@@ -47,7 +50,8 @@ int play(neuralNet & red, neuralNet & black, const int turns, const string start
         if(temp.second){
             game.push_back(temp.first);
             t_count++;
-            cout << game[t_count] << endl;
+            cout << "black move:" << endl;
+            printB(game[t_count]);
         }else{
             cout << "red wins" << endl;
             return (p_count(game[t_count], 'r') * 3);
