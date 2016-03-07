@@ -148,7 +148,13 @@ std::vector<std::string> getBoardsN(std::vector<std::string> boards, int turn=0)
         for(int j=0; j<4; ++j)
         {
             
-            temp = mBoards(boards[0], i, turn, j, temp.first);
+            if(turn == 1 && boards[0][i] == 'R'){
+                temp = mBoards(boards[0], i, 3, j, temp.first);
+            }else if(turn==0 && boards[0][i] == 'B'){
+                temp = mBoards(boards[0], i, 3, j, temp.first);
+            }else{
+                temp = mBoards(boards[0], i, turn, j, temp.first);
+            }
             //std::cout << temp.first <<" " <<lim <<std::endl;
             if(temp.first>=lim)
             {

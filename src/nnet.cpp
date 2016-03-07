@@ -148,10 +148,11 @@ string neuralNet::go(const string & board, bool red){
     else
         boards = getBoardsN(pboard, 0);
 
-    for(int i = 0; i < boards.size(); ++i)
+    for(int i = 1; i < boards.size(); ++i)
         weighedBoards.push_back(make_pair(evaluate(deString(boards[i])),boards[i]));
-    std::sort(weighedBoards.begin()+1, weighedBoards.end());
-    return weighedBoards[1].second;
+
+    std::sort(weighedBoards.begin(), weighedBoards.end());
+    return weighedBoards[0].second;
 }
 
 void neuralNet::makeNodeLevels(){
