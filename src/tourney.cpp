@@ -1,0 +1,69 @@
+#include "tourney.h"
+#include <vector>
+using std::vector;
+#include <utility>
+using std::pair;
+using std::make_pair;
+#include <random>
+using std::random_device;
+using std::mt19937;
+using std::normal_distribution;
+#include <iostream>
+using std::cout;
+using std::endl;
+
+double evolutionize(const double & W){
+    random_device d;
+    mt19937 rand(d());
+    auto signorm = normal_distribution<>(1.0, .5);
+    double sigma = signorm(rand);
+    auto newWeight = normal_distribution<>(W, sigma);
+    return newWeight(rand);
+    return W;
+}
+
+pair<int, vector<neuralNet> > roundrobin(vector<neuralNet> & nets){
+    int score = 0;
+    vector<pair<int, neuralNet> > playedBoards;
+    cout << "start round robin" << endl;
+    for(int i = 0; i < nets.size(); ++i){
+        score = 0;
+        for(int j = 0; j < nets.size(); ++j){
+            if(i == j)
+                continue;
+            cout << "playing!" << endl;
+            score += play(nets[i], nets[j]);
+        }
+        cout << "net " << i << " done" << endl;
+        playedBoards.push_back(make_pair(score, nets[i]));
+    }
+    int kids = 0;
+    int mean;
+    int tot = 0;
+    int pc = 0;
+    vector<pair<int, neuralNet> > worthy;
+    string path = "out";
+    for(int i = 0; i < playedBoards.size(); ++i){
+        tot += playedBoards[i].first;
+    }
+    mean = tot / playedBoards.size();
+    tot = 0;
+    for(int i = 0; i < playedBoards.size(); ++i){
+        if(playedBoards[i].first > mean){
+            playedBoards[i].second.evolve(path+=std::to_string(pc), evolutionize);
+            path = "out";
+            worthy.push_back(playedBoards[i]);
+            kids++;
+            pc++;
+        }
+    }
+    for(int i = 0; i < worthy.size(); ++i)
+        tot += worthy[i].first;
+    mean = tot / worthy.size();
+    vector<neuralNet> rNets;
+    for(int i = 0; i < worthy.size(); ++i)
+        if(worthy[i].first > mean)
+            rNets.push_back(worthy[i].second);
+
+    return make_pair(kids, rNets);
+}
