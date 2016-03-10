@@ -25,10 +25,11 @@ int main(){
     random_device rd;
     mt19937 randomG(rd());
     size_t gen = 0; 
-    auto d = normal_distribution<> (0,.9);
+    auto d = std::uniform_real_distribution<> (-1,1);
     cout << "start random gen" << endl;
     for(int i = 0; i < 100; ++i){
         startW.clear();
+        randomG.seed(rd());
         for(int j = 0; j < 3700; ++j)
             startW.push_back(d(randomG));
         nets.push_back(neuralNet({32,40,40,20,1}, startW));
