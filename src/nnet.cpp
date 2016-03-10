@@ -1,8 +1,8 @@
 //source file for nnet.h
 //all definitions in header file
-//#include "nnet.h"
-//#include "movement.h"
-#include "alphbeta.h"
+#include "nnet.h"
+#include "movement.h"
+//#include "alphbeta.h"
 #include <cmath>
 using std::exp;
 #include <string>
@@ -19,13 +19,41 @@ using std::function;
 using std::pair;
 using std::make_pair;
 #include <algorithm>
-
+#include <vector>
+using std::vector;
+#include <map>
+using std::map;
 
 //debug -- remove later --
 #include <iostream>
 using std::cout;
 using std::endl;
 //end debug
+
+struct mov{
+    public:
+    mov(string b, mov * p, bool m=true):current(b),pops(p),max(m)
+    {}
+    void make_babies(bool red){
+        auto temp = getBoardsN({current}, red);
+        for(int i = 0; i < temp.size(); ++i){
+            kodomo.push_back(mov(temp[i], this, !max));
+        }
+    }
+    vector<mov> get_kids() { return kodomo; }
+    void set_score(double a) { score = a; }
+    bool isMax() { return max; }
+    string get_cur() { return current; }
+    double get_score() { return score; }
+    mov * get_pops() { return pops; }
+    private:
+    string current;
+    vector<mov> kodomo;
+    double score;
+    bool max;
+    mov * pops;
+};
+
 
 vector<double> deString(string board, double king = 1.5){
     vector<double> rvec;
@@ -41,6 +69,8 @@ vector<double> deString(string board, double king = 1.5){
     }
     return rvec;
 }
+
+
 
 inline static double sigmoid(double sum, const double a, double b, const double c){
     if(b==0)
@@ -112,6 +142,44 @@ double neuralNet::evaluate(const vector<double> & input, const double a, const d
 
        return nodeLevels_[nodeLevels_.size()-1][0].value;
 }
+
+double minimax(string board, bool red, neuralNet & net, int depth = 9){
+    auto check = getBoardsN({board},red);
+    if(check.size() <= 0){
+        return 9001;
+    }
+    mov head(board, nullptr);
+    head.make_babies(red);
+    vector<mov*> tree;
+    for(int i = 0; i < depth; ++i){
+        for(auto j : head.get_kids()){
+            j.make_babies(red);
+            tree.push_back(&j);
+        }
+    }
+    for(int i = tree.size()-1; i > 0; --i){
+        tree[i]->set_score(net.evaluate(deString(tree[i]->get_cur())));
+    }
+    for(int i = tree.size()-1; i > 0; --i){
+        if(tree[i]->isMax()){
+            auto temp = tree[i]->get_pops();
+            if(temp->get_score() <= tree[i]->get_score())
+                temp->set_score(tree[i]->get_score());
+        }else{
+            auto temp = tree[i]->get_pops();
+            if(temp->get_score() >= tree[i]->get_score())
+                temp->set_score(tree[i]->get_score());
+        }
+    }
+    
+    map<string, double> moveses;
+    for(int i = 0; i < check.size(); ++i){
+        moveses[tree[i]->get_cur()] = tree[i]->get_score();
+    }
+    return moveses[board];
+}
+
+
 void neuralNet::evolve(const string & path, function<double(double)> evolver){
    ofstream writeNet(path.c_str());
    if(!writeNet)
@@ -151,9 +219,12 @@ pair<string,bool> neuralNet::go(const string & board, bool red){
         boards = getBoardsN(pboard, 1);
     else
         boards = getBoardsN(pboard, 0);
-
+        
     for(int i = 1; i < boards.size(); ++i)
-        weighedBoards.push_back(make_pair(evaluate(deString(boards[i])),boards[i]));
+        weighedBoards.push_back(make_pair(minimax(boards[i],red, *this),boards[i]));
+
+    //for(int i = 1; i < boards.size(); ++i)
+       // weighedBoards.push_back(make_pair(evaluate(deString(boards[i])),boards[i]));
         
     if(weighedBoards.size() > 0){
         std::sort(weighedBoards.begin(), weighedBoards.end());
@@ -161,6 +232,7 @@ pair<string,bool> neuralNet::go(const string & board, bool red){
     }else{
         return make_pair("end", false);
     }
+    
 }
 
 void neuralNet::makeNodeLevels(){
