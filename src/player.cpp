@@ -21,20 +21,22 @@ int p_count(string board, char turn){
 }
 
 
-int play(neuralNet & red, neuralNet & black, const int turns, const string startB){
+int play(neuralNet & red, neuralNet & black,int pc, const int turns, const string startB){
     int t_count = 0;
     vector<string> game;
+    game.clear(); 
     game.push_back(startB);
-    
     while(t_count < turns){
         auto temp = red.go(game[t_count], true);
         if(temp.second){
             game.push_back(temp.first);
             t_count++;
             //cout << "red move:" << endl;
-            cout << game[t_count] << endl;
+            if(pc == 1)
+                cout << game[t_count] << endl;
         }else{
-            cout << "black wins" << endl;
+            if(pc ==1)
+                cout << "black wins" << endl;
             return (p_count(game[t_count], 'b') * -5);
         }
         temp = black.go(game[t_count], false);
@@ -42,9 +44,11 @@ int play(neuralNet & red, neuralNet & black, const int turns, const string start
             game.push_back(temp.first);
             t_count++;
             //cout << "black move:" << endl;
-            cout << game[t_count] << endl;
+            if(pc == 1)
+                cout << game[t_count] << endl;
         }else{
-            cout << "red wins" << endl;
+            if(pc == 1)
+                cout << "red wins" << endl;
             return (p_count(game[t_count], 'r') * 3);
         }
     }

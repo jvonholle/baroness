@@ -25,6 +25,7 @@ int main(){
     random_device rd;
     mt19937 randomG(rd());
     size_t gen = 0; 
+    int check;
     auto d = std::uniform_real_distribution<> (-1,1);
     cout << "start random gen" << endl;
     for(int i = 0; i < 100; ++i){
@@ -45,6 +46,8 @@ int main(){
         << "offspring: " << count.first << endl
         << "survivors: " << count.second.size() << endl;
     while(true){
+        cout << "1 for printed turns, 0 for silent" << endl;
+        std::cin >> check;
         b = steady_clock::now();
         nets.clear();
         for(auto& i : count.second)
@@ -62,7 +65,7 @@ int main(){
                 nets.push_back(neuralNet({32,40,40,20,1}, startW));
             }
         }
-        count = roundrobin(nets);
+        count = roundrobin(nets, check);
         e = steady_clock::now();
         diff = e - b; 
         cout << "gen: " << gen << endl

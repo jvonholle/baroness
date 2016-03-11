@@ -32,7 +32,9 @@ using std::endl;
 
 struct mov{
     public:
-    mov(string b, mov * p, bool m=true):current(b),pops(p),max(m)
+    mov():current("end"),pops(nullptr),max(true)
+    {}
+    mov(const string  & b, mov * p, bool m=true):current(b),pops(p),max(m)
     {}
     void make_babies(bool red){
         auto temp = getBoardsN({current}, red);
@@ -65,9 +67,10 @@ vector<double> deString(string board, bool red, double king = 1.5){
                 case 'R' : rvec.push_back(king); break;
                 case 'B' : rvec.push_back(king * -1); break;
                 case '_' : rvec.push_back(0); break;
-                default : cout << "DEFAULT!!!!" << endl;
+                default : cout << "DEFAULT BECAUSE: " << board[i] << endl;
             }
         }
+        return rvec;
     }else{
         for(int i = 0; i < 32; ++i){
             switch(board[i]){
@@ -76,11 +79,11 @@ vector<double> deString(string board, bool red, double king = 1.5){
                 case 'R' : rvec.push_back(king*-1); break;
                 case 'B' : rvec.push_back(king); break;
                 case '_' : rvec.push_back(0); break;
-                default : cout << "DEFAULT!!!!" << endl;
+                default : cout << "DEFAULT BECAUSE: " << board[i] << endl;
             }
         }
+        return rvec;
     }
-    return rvec;
 }
 
 
@@ -163,31 +166,29 @@ double minimax(string board, bool red, neuralNet & net, int depth = 9){
     }
     mov head(board, nullptr);
     head.make_babies(red);
-    vector<mov*> tree;
+    vector<mov> tree;
     for(int i = 0; i < depth; ++i){
-        for(auto j : head.get_kids()){
+        for(auto  j : head.get_kids()){
             j.make_babies(red);
-            tree.push_back(&j);
+            tree.push_back(j);
         }
     }
     for(int i = tree.size()-1; i > 0; --i){
-        tree[i]->set_score(net.evaluate(deString(tree[i]->get_cur(),red)));
+        tree[i].set_score(net.evaluate(deString(tree[i].get_cur(),red)));
     }
-   // for(int i = tree.size()-1; i > 0; --i){
-       // if(tree[i]->isMax()){
-          //  auto temp = tree[i]->get_pops();
-            //if(temp->get_score() <= tree[i]->get_score())
-                //temp->set_score(tree[i]->get_score());
-      //  }else{
-      //      auto temp = tree[i]->get_pops();
-            //if(temp->get_score() >= tree[i]->get_score())
-                //temp->set_score(tree[i]->get_score());
-      //  }
-   // }
+    for(int i = tree.size()-1; i > 0; --i){
+        if(tree[i].isMax()){
+            if(tree[i].get_pops()->get_score() <= tree[i].get_score())
+                tree[i].get_pops()->set_score(tree[i].get_score());
+        }else{
+            if(tree[i].get_pops()->get_score() >= tree[i].get_score())
+                tree[i].get_pops()->set_score(tree[i].get_score());
+        }
+    }
     
     map<string, double> moveses;
     for(int i = 0; i < check.size(); ++i){
-        moveses[tree[i]->get_cur()] = tree[i]->get_score();
+        moveses[tree[i].get_cur()] = tree[i].get_score();
     }
     return moveses[board];
 }

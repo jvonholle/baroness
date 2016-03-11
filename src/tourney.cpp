@@ -11,6 +11,8 @@ using std::normal_distribution;
 #include <iostream>
 using std::cout;
 using std::endl;
+#include <chrono>
+using std::chrono::steady_clock;
 
 double evolutionize(const double & W){
     random_device d;
@@ -22,8 +24,11 @@ double evolutionize(const double & W){
     return W;
 }
 
-pair<int, vector<neuralNet> > roundrobin(vector<neuralNet> & nets){
+pair<int, vector<neuralNet> > roundrobin(vector<neuralNet> & nets, int print_check){
     int score = 0;
+    auto b = steady_clock::now();
+    auto e = steady_clock::now();
+    auto diff = e - b;
     vector<pair<int, neuralNet> > playedBoards;
     cout << "start round robin" << endl;
     for(int i = 0; i < nets.size(); ++i){
@@ -31,10 +36,12 @@ pair<int, vector<neuralNet> > roundrobin(vector<neuralNet> & nets){
         for(int j = 0; j < nets.size(); ++j){
             if(i == j)
                 continue;
-            cout << "playing!" << endl;
-            score += play(nets[i], nets[j]);
+            b = steady_clock::now();
+            score += play(nets[i], nets[j],print_check, 200);
+            e = steady_clock::now();
         }
-        cout << "net " << i << " done" << endl;
+        diff = e-b;
+        cout << "net " << i << " done time: " << std::chrono::duration<double>(diff).count() << " sec" <<endl;
         playedBoards.push_back(make_pair(score, nets[i]));
     }
     int kids = 0;

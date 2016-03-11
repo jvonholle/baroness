@@ -6,6 +6,6 @@ using std::vector;
 #include <utility>
 using std::pair;
 
-pair<int, vector<neuralNet> > roundrobin(vector<neuralNet> & nets);
+pair<int, vector<neuralNet> > roundrobin(vector<neuralNet> & nets, int print_check = 0);
 
 #endif
