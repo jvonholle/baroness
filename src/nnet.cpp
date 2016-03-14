@@ -1,8 +1,9 @@
 //source file for nnet.h
 //all definitions in header file
-#include "nnet.h"
-#include "movement.h"
+//#include "nnet.h"
+//#include "movement.h"
 //#include "alphbeta.h"
+#include "minimax.h"
 #include <cmath>
 using std::exp;
 #include <string>
@@ -176,8 +177,12 @@ void neuralNet::evolve(const string & path, function<double(double)> evolver){
 pair<string,bool> neuralNet::go(const string & board, bool red){
 
     //      CALLS TO ALPHA BETA GO HERE      \\
+    
+    string rstring = minimax(board, *this, red); 
+    bool rbool = (rstring != "end");
 
-    return make_pair("butts", false);
+    return make_pair(rstring, rbool);
+
 }
 
 void neuralNet::makeNodeLevels(){

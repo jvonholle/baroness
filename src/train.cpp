@@ -38,7 +38,7 @@ int main(){
     cout << "done random gen" << endl;
     auto b = steady_clock::now();
     cout << "starting gen -1 tourney" << endl;
-    auto count = roundrobin(nets); 
+    auto count = roundrobin(nets, 1); 
     auto e = steady_clock::now();
     auto diff = e - b;
     cout << "gen: " << -1 << endl

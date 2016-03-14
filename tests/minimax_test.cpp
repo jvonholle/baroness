@@ -17,51 +17,19 @@ using std::size_t;
 
 int main(){
     vector<double> w;
-    for(int i = 0; i < 99; ++i)
-        w.push_back(i/(i*3+i)+(i/i*17));
+    w.resize(99, .3);
     vector<size_t> l = {32,3,1};
     neuralNet tester(l,w);
 
-    string startb = "rrrr__rr___r__b_rb___r_br__bb__b";
-    auto first_kids = getBoardsN(startb, true);
+    string startb = "rrrrrrrr___r_r_b_________________";
 
-    move head(startb, tester);
-    head.make_kids(true);
-   cout << "strings in head: " << endl; 
-    for( auto & i : head.get_kids())
-        cout << i->get_current() << endl;
-   cout << "strings in first_kids: " << endl; 
-    for(auto & i : first_kids)
-        cout <<  i << endl;
 
-    vector< pair< double, string > > weighed_kids;
-
-    for( auto & i : head.get_kids())
-        i->make_kids(false);
-
-    for(int i = 0; i < first_kids.size(); ++i)
-        weighed_kids.push_back(make_pair(tester.evaluate(first_kids[i]), first_kids[i]));
-
-    sort(weighed_kids.begin(), weighed_kids.end());
-
-    for(auto & i : weighed_kids)
-        cout << "board string: " << i.second << " score: " << i.first << endl;
-
-    for( auto & i : head.get_kids()){
-        for(auto & j : i->get_kids())
-            pick(*j, true);
-       pick(*i, false); 
-    }
-
-    pick(head, true);
-
-    //string picked = minimax(startb, tester, true,  3);
+    string picked = minimax(startb, tester, true); 
+    string bpicked = minimax(picked, tester, false);
     
-    cout << "head's string: " << head.get_current() << " head's score: " << head.get_score() << endl;
-    for(auto & i : head.get_kids())
-        cout << "kid string: " << i->get_current() << " kid score: " << i->get_score() << endl;
 
-    //cout << endl << "Minimax pick: " << picked << endl;
+    cout << endl << "Minimax red pick: " << picked << endl;
+    cout << "Minimax black pick: " << bpicked << endl;
 
     return 0;
 }
