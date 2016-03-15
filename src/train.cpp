@@ -28,7 +28,7 @@ int main(){
     int check;
     auto d = std::uniform_real_distribution<> (-1,1);
     cout << "start random gen" << endl;
-    for(int i = 0; i < 100; ++i){
+    for(int i = 0; i < 10; ++i){
         startW.clear();
         randomG.seed(rd());
         for(int j = 0; j < 3700; ++j)
@@ -38,7 +38,8 @@ int main(){
     cout << "done random gen" << endl;
     auto b = steady_clock::now();
     cout << "starting gen -1 tourney" << endl;
-    auto count = roundrobin(nets, 1); 
+    std::cin >> check;
+    auto count = roundrobin(nets, check); 
     auto e = steady_clock::now();
     auto diff = e - b;
     cout << "gen: " << -1 << endl
@@ -46,8 +47,8 @@ int main(){
         << "offspring: " << count.first << endl
         << "survivors: " << count.second.size() << endl;
     while(true){
-        cout << "1 for printed turns, 0 for silent" << endl;
-        std::cin >> check;
+        //cout << "1 for printed turns, 0 for silent" << endl;
+       // std::cin >> check;
         b = steady_clock::now();
         nets.clear();
         for(auto& i : count.second)
@@ -56,7 +57,7 @@ int main(){
             nets.push_back(neuralNet(filepath+=std::to_string(i)));
             filepath = "out";
         }
-        if(nets.size() < 100){
+        if(nets.size() < 10){
             int temp = 100 - nets.size();
             for(int i = 0; i < temp; ++i){
                 startW.clear();
@@ -65,7 +66,7 @@ int main(){
                 nets.push_back(neuralNet({32,40,40,20,1}, startW));
             }
         }
-        count = roundrobin(nets, check);
+        count = roundrobin(nets);
         e = steady_clock::now();
         diff = e - b; 
         cout << "gen: " << gen << endl

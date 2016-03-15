@@ -38,6 +38,7 @@ pair<int, vector<neuralNet> > roundrobin(vector<neuralNet> & nets, int print_che
                 continue;
             b = steady_clock::now();
             score += play(nets[i], nets[j],print_check, 200);
+            cout << " game #" << (i+1)*j << endl;
             e = steady_clock::now();
         }
         diff = e-b;
