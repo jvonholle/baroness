@@ -24,7 +24,22 @@ double evolutionize(const double & W){
     return W;
 }
 
-pair<int, vector<neuralNet> > roundrobin(vector<neuralNet> & nets, int print_check){
+pair<int, vector<neuralNet> > roundrobin(vector<neuralNet> & nets, const int & gen, const int & print_check){
+    string path = "current/";
+    for(int i = 0; i < nets.size(); ++i){
+        path = "current/";
+        if(i < 10){
+            path += "net_00";
+            path += std::to_string(i);
+        }else if(i < 100){
+            path += "net_0";
+            path += std::to_string(i);
+        }else{
+            path += "net_";
+            path += std::to_string(i);
+        }
+        nets[i].evolve(path, [&] (double a) {return a;});
+    } 
     int score = 0;
     auto b = steady_clock::now();
     auto e = steady_clock::now();
@@ -38,7 +53,8 @@ pair<int, vector<neuralNet> > roundrobin(vector<neuralNet> & nets, int print_che
                 continue;
             b = steady_clock::now();
             score += play(nets[i], nets[j],print_check, 200);
-            cout << " game #" << (i+1)*j << endl;
+            if(print_check == 1)
+                cout << " game #" << (i+1)*j << endl;
             e = steady_clock::now();
         }
         diff = e-b;
@@ -50,7 +66,6 @@ pair<int, vector<neuralNet> > roundrobin(vector<neuralNet> & nets, int print_che
     int tot = 0;
     int pc = 0;
     vector<pair<int, neuralNet> > worthy;
-    string path = "out";
     for(int i = 0; i < playedBoards.size(); ++i){
         tot += playedBoards[i].first;
     }

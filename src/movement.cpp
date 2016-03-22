@@ -12,7 +12,7 @@
 
 typedef pair<int,std::string> bo; // used for boards with weights
 
-bool cSpaceN(const std::string & board, int pos)
+bool cSpaceN(std::string & board, int pos)
 {
     if(board[pos]!='_')
         return false;
@@ -31,7 +31,7 @@ void cKingN(std::string & board){
     }
 }
 
-bool cJumpN(const std::string & board, int mPos, int ePos)
+bool cJumpN(std::string & board, int mPos, int ePos)
 {
     if(checkMap(mPos).first.first == ePos)
         if(board[mPos]!=board[checkMap(mPos).first.first]&&board[checkMap(mPos).first.first]!='_')
