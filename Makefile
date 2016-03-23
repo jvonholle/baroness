@@ -20,4 +20,4 @@ trainop: src/train.cpp
 
 .PHONY: clean
 clean:
-	rm baroness */*.gch out* 
+	rm baroness */*.gch out*
