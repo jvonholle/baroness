@@ -25,7 +25,15 @@ double evolutionize(const double & W){
     double sigma = signorm(rand);
     auto newWeight = normal_distribution<>(W, sigma);
     return newWeight(rand);
-    return W;
+}
+
+string rstart_B(){
+    random_device d;
+    mt19937 rand(d());
+    string s_board = "rrrrrrrrrrrr________bbbbbbbbbbbb";
+    auto boards = getBoardsN({s_board});
+    auto p_board = std::uniform_int_distribution(0, (boards.size()-1));
+    return(boards[p_boards(rand)]);
 }
 
 pair<int, vector<neuralNet> > roundrobin(vector<neuralNet> & nets, const int & gen, const int & print_check){
@@ -122,33 +130,53 @@ pair<int, vector<neuralNet> > single(vector<neuralNet> & nets, const int & gen, 
     random_device d;
     mt19937 rand(d());
     std::shuffle(r_net.begin(), r_net.end(), rand);
-
-    /*while(net_i < net_j){
-        cout << r_net[net_i] << " vs " << r_net[net_j] << " ";
-        score_i = play(nets[r_net[net_i]], nets[r_net[net_j]], print_check, 200);
-        cout << r_net[net_j] << " vs " << r_net[net_i] << " ";
-        score_j = play(nets[r_net[net_j]], nets[r_net[net_i]], print_check, 200);
-        playedBoards.push_back(make_pair(score_i, nets[r_net[net_i]]));
-        playedBoards.push_back(make_pair(score_j, nets[r_net[net_j]]));
-        net_i++;
-        net_j = nets.size()-(net_i+1);
-    }*/
-
-    //TEST ASYNC STUFF
-    vector<future<int>> scores;
-    vector<int> helper;
+    auto b = steady_clock::now();
+    auto e = steady_clock::now();
+    auto diff = e - b;
+    int check;
+    cout << "1 for single thread, 0 for multi-thread" << endl << "> ";
+    std::cin >> check;
     
-    while(net_i < net_j){
-        scores.push_back(async(std::launch::async, [](neuralNet i, neuralNet j, int p, int t){return play(i,j,p,t);}, nets[r_net[net_i]],nets[r_net[net_j]], print_check, 200));
-        scores.push_back(async(std::launch::async, [](neuralNet i, neuralNet j, int p, int t){return play(i,j,p,t);}, nets[r_net[net_j]],nets[r_net[net_i]], print_check, 200));
-        helper.push_back(net_i);
-        helper.push_back(net_j);
-        net_i++;
-        net_j = nets.size()-(net_i+1);
+    if(check == 1){
+        while(net_i < net_j){
+            cout << r_net[net_i] << " vs " << r_net[net_j] << " ";
+            b = steady_clock::now();
+            score_i = play(nets[r_net[net_i]], nets[r_net[net_j]], print_check, 200);
+            e = steady_clock::now();
+            diff = e - b;
+            cout << "time: " << std::chrono::duration<double>(diff).count() << endl;
+            
+            cout << r_net[net_j] << " vs " << r_net[net_i] << " ";
+            b = steady_clock::now();
+            score_j = play(nets[r_net[net_j]], nets[r_net[net_i]], print_check, 200);
+            e = steady_clock::now();
+            diff = e - b;
+            cout << "time: " << std::chrono::duration<double>(diff).count() << endl;
+            
+            playedBoards.push_back(make_pair(score_i, nets[r_net[net_i]]));
+            playedBoards.push_back(make_pair(score_j, nets[r_net[net_j]]));
+            net_i++;
+            net_j = nets.size()-(net_i+1);
+        }
     }
 
-    for(int i = 0; i < nets.size(); ++i)
-        playedBoards.push_back(make_pair(scores[i].get(), nets[helper[i]]));
+    //TEST ASYNC STUFF
+    if(check == 0){
+        vector<future<int>> scores;
+        vector<int> helper;
+        
+        while(net_i < net_j){
+            scores.push_back(async(std::launch::async, [](neuralNet i, neuralNet j, int p, int t){return play(i,j,p,t);}, nets[r_net[net_i]],nets[r_net[net_j]], print_check, 200));
+            scores.push_back(async(std::launch::async, [](neuralNet i, neuralNet j, int p, int t){return play(i,j,p,t);}, nets[r_net[net_j]],nets[r_net[net_i]], print_check, 200));
+            helper.push_back(net_i);
+            helper.push_back(net_j);
+            net_i++;
+            net_j = nets.size()-(net_i+1);
+        }
+    
+        for(int i = 0; i < nets.size(); ++i)
+            playedBoards.push_back(make_pair(scores[i].get(), nets[helper[i]]));
+    }
 
     //END TEST ASYNC STUFF
 
