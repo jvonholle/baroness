@@ -8,24 +8,24 @@ using std::mt19937;
 
 string randboard(){
     string board = "rrrrrrrrrrrr________bbbbbbbbbbbb";
-    vector<char> boardPick;
+    // vector<char> boardPick;
     
-    for(int i = 0; i < 32; ++i)
-        boardPick.push_back(board[i]);
+    // for(int i = 0; i < 32; ++i)
+    //     boardPick.push_back(board[i]);
         
-    random_device rd;
-    std::mt19937 gen(rd());
+    // random_device rd;
+    // std::mt19937 gen(rd());
         
-    std::shuffle(boardPick.begin(), boardPick.end(), gen);
-    board = "";
+    // std::shuffle(boardPick.begin(), boardPick.end(), gen);
+    // board = "";
 
-    for(int i =0; i< 32; ++i)
-        board+=(boardPick[i]);
+    // for(int i =0; i< 32; ++i)
+    //     board+=(boardPick[i]);
     return board;
 } 
 
 TEST_CASE("Testing depth 6"){
-    vector<neuralNet> nets;
+    
     vector<double> startW;
     vector<string> boards;
     
@@ -36,21 +36,47 @@ TEST_CASE("Testing depth 6"){
     for(int j = 0; j < 3700; ++j)
         startW.push_back(d(randomG));
     
+    neuralNet red();
+    
+    for(int j = 0; j < 3700; ++j)
+        startW.push_back(d(randomG));
+        
+        
+    neuralNet black;
+    
     for(int i = 0; i < 100; ++i)
-        nets.push_back(neuralNet({32,40,40,20,1}, startW));
-    
-    
-    for(int i = 0; i < 1000; ++i)
         boards.push_back(randboard());
         
-    for(auto & i : nets){
-        for(auto j : boards){
-            REQUIRE(i.go(j,true, true).first == i.go(j, true, false).first);
-            REQUIRE(i.go(j,true, true).second == i.go(j, true, false).second);
+    while(t_count < 200){
+        auto temp_mm = red.go(game[t_count], true, false);
+        auto temp_ab = red.go(game[t_count], true, true);        
+        REQUIRE(temp_mm.first == temp_ab.first);
+        REQUIRE(temp_mm.second == temp_ab.second);
 
-            REQUIRE(i.go(j,false, true).first == i.go(j, false, false).first);
-            REQUIRE(i.go(j,false, true).second == i.go(j, false, false).second);
+        if(temp_mm.second && temp_ab.second){
+            game.push_back(temp.first);
+            t_count++;
+        }else{
+            break;
         }
-    }
 
+        
+        temp_mm = black.go(game[t_count], true, false);
+        temp_ab = black.go(game[t_count], true, true);        
+        REQUIRE(temp_mm.first == temp_ab.first);
+        REQUIRE(temp_mm.second == temp_ab.second);
+        
+        
+        if(temp_mm.second && temp_ab.second){
+            game.push_back(temp.first);
+            t_count++;
+        }else{
+            break;
+        }
+    }    
 }
+
+//CODE FROM PLAYER.CPP
+//NEED TO TURN INTO WORKABLE CATCH STUFF
+
+//     

@@ -151,14 +151,21 @@ string minimaxAB(string board_start, neuralNet & net, bool red){
                     for(auto & m : l->get_kids())
                         for(auto & n : m->get_kids())
                             n->make_kids(red);
-                            
+                 
+     for(auto & i : head.get_kids())
+        for(auto & j : i->get_kids())
+            for(auto & k : j->get_kids())
+                for(auto & l : k->get_kids())
+                    for(auto & m : l->get_kids())
+                        for(auto & n : m->get_kids())
+                            pick(*n, true, red);
+                                       
     
     vector<pair<double, string> > rboards;
     
-    alphabeta(head, 6, -10000, 10000, true, red);
     
     for(auto & i : head.get_kids())
-        rboards.push_back(make_pair(i->get_score(), i->get_current()));
+        rboards.push_back(make_pair(alphabeta(*i, 6, -10000, 10000, true, red), i->get_current()));
     if(rboards.size() <= 0){
         return "end";
     }else{
