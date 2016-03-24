@@ -35,7 +35,7 @@ int play(neuralNet & red, neuralNet & black,int pc, const int turns, const strin
             if(pc == 1)
                 cout << game[t_count] << endl;
         }else{
-            cout << "black wins" << endl;
+            //cout << "black wins" << endl;
             return (p_count(game[t_count], 'b') * -5);
         }
         temp = black.go(game[t_count], false);
@@ -46,10 +46,10 @@ int play(neuralNet & red, neuralNet & black,int pc, const int turns, const strin
             if(pc == 1)
                 cout << game[t_count] << endl;
         }else{
-            cout << "red wins" << endl;
+           // cout << "red wins" << endl;
             return (p_count(game[t_count], 'r') * 3);
         }
     }
-    cout << "draw!" << endl;
+    //cout << "draw!" << endl;
     return (p_count(game[t_count], 'r') - p_count(game[t_count], 'b'));
 }

@@ -5,12 +5,12 @@ using std::sort;
 using std::cout;
 using std::endl;
 
-void pick(move & board, bool max){
+void pick(move & board, bool max, bool red){
     if(board.get_kids().size() <= 1)
         return;
     for(int i = 0; i < board.get_kids().size(); ++i)
         if(board.get_kids()[i]->not_set())
-            board.get_kids()[i]->set_score(board.get_net()->evaluate(board.get_kids()[i]->get_current()));
+            board.get_kids()[i]->set_score(board.get_net()->evaluate(board.get_kids()[i]->get_current(), red));
 
     if(max){
         board.set_score(-1000);
@@ -55,17 +55,17 @@ string minimax(string board_start, neuralNet & net, bool red){
             for(auto & k : j->get_kids()){
                 for(auto & l : k->get_kids()){
                     for(auto & m : l->get_kids()){
-                        pick(*m, false); 
+                        pick(*m, false, red); 
                     }
-                    pick(*l, true);
+                    pick(*l, true, red);
                 }
-                pick(*k, false);
+                pick(*k, false, red);
             }
-            pick(*j, true);
+            pick(*j, true, red);
         }
-        pick(*i, false);
+        pick(*i, false, red);
     }
-    pick(head, true);
+    pick(head, true, red);
     vector<pair<double, string> > rboards;
 
     for(auto & i : head.get_kids())

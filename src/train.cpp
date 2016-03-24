@@ -87,12 +87,15 @@ int main(){
     mt19937 randomG(rd());
     size_t gen = 0; 
     int check;
+    int num_nets;
     auto d = std::uniform_real_distribution<> (-1,1);
 
     cout << "1 for new random gen, 3 to load last saved, 4 to load last used gen" << endl << "> ";
     std::cin >> check;
     if(check == 3 || check == 4){
-        load(nets, check, 100);
+        cout << "how many nets to load? if not sure use 100" << endl << "> ";
+        std::cin >> num_nets;
+        load(nets, check, num_nets);
     }else{ 
         for(int i = 0; i < 100; ++i){
             startW.clear();
@@ -109,7 +112,6 @@ int main(){
 
     auto b = steady_clock::now();
 
-    cout << "starting gen -1 tourney" << endl;
     auto count = single(nets, -1, check); 
     auto e = steady_clock::now();
     auto diff = e - b;
@@ -127,7 +129,7 @@ int main(){
             nets.push_back(neuralNet(filepath+=std::to_string(i)));
             filepath = "out";
         }
-        if(nets.size() < 10){
+        if(nets.size() < 100){
             int temp = 100 - nets.size();
             for(int i = 0; i < temp; ++i){
                 startW.clear();

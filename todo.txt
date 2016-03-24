@@ -4,7 +4,15 @@ More timing
     average time per game
     
 GUI
-    ncurses
+    ncurses?
+        current game(s) being played
+        time for last turn
+        last 3 moves
+        result of last game
+        progress through gen
+        gen number
+        button to save/quit/load
+    SDL?
         current game(s) being played
         time for last turn
         last 3 moves
