@@ -70,6 +70,7 @@ int main(){
     e = steady_clock::now();
     diff = e-b;
     cout << "evolve time: " << std::chrono::duration<double>(diff).count() << endl;
+    cout << tester.evaluate(deString(testboards[10])) << endl;
 
     neuralNet test2("output");
 

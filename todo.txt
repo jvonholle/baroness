@@ -1,0 +1,21 @@
+More timing
+    -average time per turn
+    max time per turn
+    -average time per game
+    
+GUI
+    SDL
+        current game(s) being played
+        time for last turn
+        last 3 moves
+        result of last game
+        progress through gen
+        gen number
+        button to save/quit/load
+
+More saving
+    current gen games
+    top net - labeled
+    stats
+        timing, average score, survivors
+

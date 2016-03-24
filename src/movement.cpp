@@ -12,14 +12,26 @@
 
 typedef pair<int,std::string> bo; // used for boards with weights
 
-bool cSpaceN(const std::string & board, int pos)
+bool cSpaceN(std::string & board, int pos)
 {
     if(board[pos]!='_')
         return false;
     return true;
 }
 
-bool cJumpN(const std::string & board, int mPos, int ePos)
+void cKingN(std::string & board){
+    for(int i = 0; i < 32; ++i){
+        if(i >= 0 && i < 4 ){
+            if(board[i] == 'b')
+                board[i] = 'B';
+        }else if(i>= 28 && i < 32){
+            if(board[i] == 'r')
+                board[i] = 'R';
+        }
+    }
+}
+
+bool cJumpN(std::string & board, int mPos, int ePos)
 {
     if(checkMap(mPos).first.first == ePos)
         if(board[mPos]!=board[checkMap(mPos).first.first]&&board[checkMap(mPos).first.first]!='_')
@@ -136,7 +148,13 @@ std::vector<std::string> getBoardsN(std::vector<std::string> boards, int turn=0)
         for(int j=0; j<4; ++j)
         {
             
-            temp = mBoards(boards[0], i, turn, j, temp.first);
+            if(turn == 1 && boards[0][i] == 'R'){
+                temp = mBoards(boards[0], i, 3, j, temp.first);
+            }else if(turn==0 && boards[0][i] == 'B'){
+                temp = mBoards(boards[0], i, 3, j, temp.first);
+            }else{
+                temp = mBoards(boards[0], i, turn, j, temp.first);
+            }
             //std::cout << temp.first <<" " <<lim <<std::endl;
             if(temp.first>=lim)
             {
@@ -153,6 +171,8 @@ std::vector<std::string> getBoardsN(std::vector<std::string> boards, int turn=0)
             }
         }
     }
+    for(int i = 0; i< boards.size(); ++i)
+        cKingN(boards[i]);
     return boards;
 }
 
