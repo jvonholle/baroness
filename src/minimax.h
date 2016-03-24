@@ -55,5 +55,6 @@ private:
 void pick(move & board, bool max, bool red);
 
 string minimax(string board_start, neuralNet & net, bool red);
+string minimaxAB(string board_start, neuralNet & net, bool red);
 
 #endif
