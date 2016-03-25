@@ -27,12 +27,11 @@ double evolutionize(const double & W){
     return newWeight(rand);
 }
 
-string rstart_B(){
+string rstart_B(bool red, string s_board = "rrrrrrrrrrrr________bbbbbbbbbbbb"){
     random_device d;
     mt19937 rand(d());
-    string s_board = "rrrrrrrrrrrr________bbbbbbbbbbbb";
-    auto boards = getBoardsN({s_board});
-    auto p_board = std::uniform_int_distribution(0, (boards.size()-1));
+    auto boards = getBoardsN({s_board},red);
+    auto p_board = std::uniform_int_distribution(1, (boards.size()-1));
     return(boards[p_boards(rand)]);
 }
 

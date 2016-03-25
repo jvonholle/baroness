@@ -15,15 +15,15 @@ struct move{
 public:
     move(string board, neuralNet & net):current_(board),net_(make_shared<neuralNet>(net)), set_(false)
     {}
-    move(string board, shared_ptr<neuralNet> net):current_(board),net_(net),set_(false)
-    {} 
+    move(string board, shared_ptr<neuralNet> net, bool red):current_(board),net_(net),set_(false)
+    { score_ = net->evaluate(board, red); } 
             
 
     void make_kids(bool red){
         auto temp = getBoardsN({current_}, red);
         if(temp.size() > 1) 
             for(int i = 1; i < temp.size(); ++i)
-                kids_.push_back(make_shared<move>(move(temp[i],net_)));
+                kids_.push_back(make_shared<move>(move(temp[i],net_,red)));
         else
             return;
     }

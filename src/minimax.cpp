@@ -152,13 +152,13 @@ string minimaxAB(string board_start, neuralNet & net, bool red){
                         for(auto & n : m->get_kids())
                             n->make_kids(red);
                  
-     for(auto & i : head.get_kids())
-        for(auto & j : i->get_kids())
-            for(auto & k : j->get_kids())
-                for(auto & l : k->get_kids())
-                    for(auto & m : l->get_kids())
-                        for(auto & n : m->get_kids())
-                            pick(*n, true, red);
+    //  for(auto & i : head.get_kids())
+    //     for(auto & j : i->get_kids())
+    //         for(auto & k : j->get_kids())
+    //             for(auto & l : k->get_kids())
+    //                 for(auto & m : l->get_kids())
+    //                     for(auto & n : m->get_kids())
+    //                         pick(*n, true, red);
                                        
     
     vector<pair<double, string> > rboards;

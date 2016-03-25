@@ -27,25 +27,25 @@ string randboard(){
 TEST_CASE("Testing depth 6"){
     
     vector<double> startW;
-    vector<string> boards;
-    
+    vector<string> game;
+    game.push_back(randboard());
     random_device rd;
     mt19937 randomG(rd());
+    int t_count = 0;
     auto d = std::uniform_real_distribution<> (-1,1);
     
     for(int j = 0; j < 3700; ++j)
         startW.push_back(d(randomG));
     
-    neuralNet red();
+    neuralNet red({32, 40, 40, 20, 1}, startW);
     
+    startW.clear();
     for(int j = 0; j < 3700; ++j)
         startW.push_back(d(randomG));
         
         
-    neuralNet black;
+    neuralNet black({32,40,40,20,1}, startW);
     
-    for(int i = 0; i < 100; ++i)
-        boards.push_back(randboard());
         
     while(t_count < 200){
         auto temp_mm = red.go(game[t_count], true, false);
@@ -54,7 +54,7 @@ TEST_CASE("Testing depth 6"){
         REQUIRE(temp_mm.second == temp_ab.second);
 
         if(temp_mm.second && temp_ab.second){
-            game.push_back(temp.first);
+            game.push_back(temp_ab.first);
             t_count++;
         }else{
             break;
@@ -68,7 +68,7 @@ TEST_CASE("Testing depth 6"){
         
         
         if(temp_mm.second && temp_ab.second){
-            game.push_back(temp.first);
+            game.push_back(temp_ab.first);
             t_count++;
         }else{
             break;
