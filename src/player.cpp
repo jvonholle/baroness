@@ -23,7 +23,7 @@ int p_count(string board, char turn){
 }
 
 
-int play(neuralNet & red, neuralNet & black,int pc, const int turns, const string startB){
+void play(neuralNet & red, neuralNet & black,int pc, const int turns, const string startB){
     int t_count = 0;
     auto b = steady_clock::now();
     auto e = steady_clock::now();
@@ -39,10 +39,12 @@ int play(neuralNet & red, neuralNet & black,int pc, const int turns, const strin
         b = steady_clock::now();
         
         auto temp = red.go(game[t_count], true);
-        
-        e = steady_clock::now();
-        diff = e - b;
-        t_times.push_back(std::chrono::duration_cast<std::chrono::milliseconds>(diff).count()/1000.0);
+
+        if(pc == 1){ 
+            e = steady_clock::now();
+            diff = e - b;
+            t_times.push_back(std::chrono::duration_cast<std::chrono::milliseconds>(diff).count()/1000.0);
+        }
         
         if(temp.second){
             game.push_back(temp.first);
@@ -51,12 +53,16 @@ int play(neuralNet & red, neuralNet & black,int pc, const int turns, const strin
             if(pc == 1)
                 cout << game[t_count] << " " << t_times[t_count-1] << " sec" << endl;
         }else{
-            for(int i = 0; i<t_times.size(); ++i)
-                avg_t+= t_times[i];
-            avg_t = avg_t/t_times.size();
+            if(pc == 1){
+                for(int i = 0; i<t_times.size(); ++i)
+                    avg_t+= t_times[i];
+                avg_t = avg_t/t_times.size();
             
-            cout << "black wins, average turn time: " << avg_t << " ";
-            return (p_count(game[t_count], 'b') * -5);
+                cout << "black wins, average turn time: " << avg_t << " ";
+            }
+            black.set_score(3);
+            red.set_score(-3);
+            return;
         }
         
         b = steady_clock::now();
@@ -79,12 +85,18 @@ int play(neuralNet & red, neuralNet & black,int pc, const int turns, const strin
                 avg_t+= t_times[i];
             avg_t = avg_t/t_times.size();
             cout << "red wins, average turn time: " << avg_t << " ";
-            return (p_count(game[t_count], 'r') * 3);
+            black.set_score(-3);
+            red.set_score(3);
+            return;
         }
     }
     for(int i = 0; i<t_times.size(); ++i)
                 avg_t+= t_times[i];
             avg_t = avg_t/t_times.size();
     cout << "draw! average turn time: " << avg_t << " ";
-    return (p_count(game[t_count], 'r') - p_count(game[t_count], 'b'));
+    
+    black.set_score(-1);
+    red.set_score(-1);
+
+    return;
 }

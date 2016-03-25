@@ -2,6 +2,13 @@ More timing
     -average time per turn
     max time per turn
     -average time per game
+
+Change tourney
+    best of 5
+    3 points for win
+    -1 points for draw
+    -3 points for lose
+    points > 0 to evolve 
     
 GUI
     SDL

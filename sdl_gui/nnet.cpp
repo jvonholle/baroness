@@ -176,8 +176,9 @@ void neuralNet::evolve(const string & path, function<double(double)> evolver){
 
 pair<string,bool> neuralNet::go(const string & board, bool red){
 
+    //      CALLS TO ALPHA BETA GO HERE      \\
     
-    string rstring = minimaxAB(board, *this, red); 
+    string rstring = minimax(board, *this, red); 
     bool rbool = (rstring != "end");
 
     return make_pair(rstring, rbool);
