@@ -77,9 +77,9 @@ string minimax(string board_start, neuralNet & net, bool red){
     move head(board_start, net);
     head.make_kids(red);
     
-    if(head.get_kids().size() == 2)
-        return head.get_kids()[1]->get_current();
     if(head.get_kids().size() == 1)
+        return head.get_kids()[0]->get_current();
+    if(head.get_kids().size() <= 0)
         return "end";
 
     for(auto & i : head.get_kids())
@@ -129,9 +129,9 @@ string minimaxAB(string board_start, neuralNet & net, bool red){
     move head(board_start, net);
     head.make_kids(red);
     
-    if(head.get_kids().size() == 2)
-        return head.get_kids()[1]->get_current();
     if(head.get_kids().size() == 1)
+        return head.get_kids()[0]->get_current();
+    if(head.get_kids().size() <= 0)
         return "end";
 
     for(auto & i : head.get_kids())
@@ -219,9 +219,9 @@ string minimax_dfs(string board_start, neuralNet & net, bool red){
     move head(board_start, net);
     head.make_kids(red);
     
-    if(head.get_kids().size() == 2)
-        return head.get_kids()[1]->get_current();
-    if(head.get_kids().size() <= 1)
+    if(head.get_kids().size() == 1)
+        return head.get_kids()[0]->get_current();
+    if(head.get_kids().size() <= 0)
         return "end";
         
     vector<pair<double, string> > rboards;
