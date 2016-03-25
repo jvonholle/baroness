@@ -59,7 +59,7 @@ int main(){
         auto temp_ab = red.go(game[t_count], true, ab);
         auto temp_df = red.go(game[t_count], true, dfs);
 
-        if(temp_mm.second && temp_ab.second){
+        if(temp_mm.second && temp_ab.second && temp_df.second){
             game.push_back(temp_ab.first);
             t_count++;
         }else{
@@ -70,7 +70,7 @@ int main(){
         temp_ab = black.go(game[t_count], false, ab);
         temp_df = black.go(game[t_count], false, dfs);
 
-        if(temp_mm.second && temp_ab.second){
+        if(temp_mm.second && temp_ab.second && temp_df.second){
             game.push_back(temp_ab.first);
             t_count++;
         }else{

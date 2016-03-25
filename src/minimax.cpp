@@ -221,7 +221,7 @@ string minimax_dfs(string board_start, neuralNet & net, bool red){
     
     if(head.get_kids().size() == 2)
         return head.get_kids()[1]->get_current();
-    if(head.get_kids().size() == 1)
+    if(head.get_kids().size() <= 1)
         return "end";
         
     vector<pair<double, string> > rboards;
@@ -234,7 +234,7 @@ string minimax_dfs(string board_start, neuralNet & net, bool red){
     sort(rboards.begin(), rboards.end());
     auto e = steady_clock::now();
     auto diff = e - b;
-    cout << "DFS: " << rboards[rboards.size()-1].second << " " << dfs_count << " " << std::chrono::duration<double>(diff).count() << endl;
+    cout << "DF: " << rboards[rboards.size()-1].second << " " << dfs_count << " " << std::chrono::duration<double>(diff).count() << endl;
     dfs_count = 0;
     return rboards[rboards.size()-1].second;
 }

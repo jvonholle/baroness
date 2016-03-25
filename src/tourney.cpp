@@ -65,7 +65,7 @@ pair<int, vector<neuralNet> > single(vector<neuralNet> & nets, const int & gen, 
     auto b = steady_clock::now();
     auto e = steady_clock::now();
     auto diff = e - b;
-    int check;
+/*    int check;
     cout << "1 for single thread, 0 for multi-thread" << endl << "> ";
     std::cin >> check;
     
@@ -114,14 +114,19 @@ pair<int, vector<neuralNet> > single(vector<neuralNet> & nets, const int & gen, 
             net_i++;
             net_j = nets.size()-(net_i+1);
         }
-    }
+    }*/
 
     //ASYNC STUFF
-    if(check == 0){
+//    if(check == 0){
         vector<future<void>> scores;
         
         while(net_i < net_j){
+            string temp = rstartB(true);
+            temp = rstartB(false, temp);
             scores.push_back(async(std::launch::async, [](neuralNet i, neuralNet j, int p, int t){return play(i,j,p,t);}, nets[r_net[net_i]],nets[r_net[net_j]], print_check, 200));
+            scores.push_back(async(std::launch::async, [](neuralNet i, neuralNet j, int p, int t){return play(i,j,p,t);}, nets[r_net[net_j]],nets[r_net[net_i]], print_check, 200));
+            scores.push_back(async(std::launch::async, [](neuralNet i, neuralNet j, int p, int t, string s){return play(i,j,p,t,s);}, nets[r_net[net_i]],nets[r_net[net_j]], print_check, 200, temp));
+            scores.push_back(async(std::launch::async, [](neuralNet i, neuralNet j, int p, int t, string s){return play(i,j,p,t,s);}, nets[r_net[net_j]],nets[r_net[net_i]], print_check, 200, temp));
             scores.push_back(async(std::launch::async, [](neuralNet i, neuralNet j, int p, int t){return play(i,j,p,t);}, nets[r_net[net_j]],nets[r_net[net_i]], print_check, 200));
             net_i++;
             net_j = nets.size()-(net_i+1);
@@ -129,7 +134,7 @@ pair<int, vector<neuralNet> > single(vector<neuralNet> & nets, const int & gen, 
     
         for(int i = 0; i < nets.size(); ++i)
             scores[i].get();
-    }
+ //   }
 
     //END TEST ASYNC STUFF
 
