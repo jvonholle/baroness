@@ -174,14 +174,27 @@ void neuralNet::evolve(const string & path, function<double(double)> evolver){
   writeNet.close(); 
 }
 
-pair<string,bool> neuralNet::go(const string & board, bool red){
+// pair<string,bool> neuralNet::go(const string & board, bool red){
+//     string rstring = minimaxAB(board, *this, red); 
+//     bool rbool = (rstring != "end");
 
-    
-    string rstring = minimaxAB(board, *this, red); 
-    bool rbool = (rstring != "end");
+//     return make_pair(rstring, rbool);
+// }
 
-    return make_pair(rstring, rbool);
-
+pair<string,bool> neuralNet::go(const string & board, bool red, string & ab){
+    if(ab == "ab"){
+        string rstring = minimaxAB(board, *this, red); 
+        bool rbool = (rstring != "end");
+        return make_pair(rstring, rbool);
+    }else if(ab == "mm"){
+        string rstring = minimax(board, *this, red); 
+        bool rbool = (rstring != "end");
+        return make_pair(rstring, rbool);
+    }else if(ab == "dfs"){
+        string rstring = minimax_dfs(board, *this, red); 
+        bool rbool = (rstring != "end");
+        return make_pair(rstring, rbool);
+    }
 }
 
 void neuralNet::makeNodeLevels(){

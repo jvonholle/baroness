@@ -3,7 +3,7 @@ More timing
     max time per turn
     -average time per game
 
-Change tourney
+-Change tourney
     best of 5
     3 points for win
     -1 points for draw
