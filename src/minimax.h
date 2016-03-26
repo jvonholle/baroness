@@ -14,10 +14,10 @@ using std::make_shared;
 
 struct move{
 public:
-    move(string board, neuralNet & net):current_(board),net_(make_shared<neuralNet>(net)), set_(false)
+    move(string board, neuralNet & net):current_(board),net_(make_shared<neuralNet>(net))
     {}
-    move(string board, shared_ptr<neuralNet> net, bool red):current_(board),net_(net),set_(false)
-    { score_ = net->evaluate(board, red); } 
+    move(string board, shared_ptr<neuralNet> net, bool red):current_(board),net_(net)
+    { score_ = net_->evaluate(board, red); } 
             
 
     void make_kids(bool red){
@@ -32,10 +32,7 @@ public:
             return;
     }
 
-    void set_score(double a){
-        set_ = true;
-        score_ = a;
-    }vector<shared_ptr<move> > get_kids(){
+    vector<shared_ptr<move> > get_kids(){
         return kids_;
     }double get_score(){
         return score_;
@@ -44,16 +41,12 @@ public:
     }shared_ptr<neuralNet> get_net(){
         return net_;
     }
-    bool not_set(){
-        return !set_;
-    }
 
 private:
     vector<shared_ptr<move> > kids_;
     string current_;
     double score_;
     shared_ptr<neuralNet> net_;
-    bool set_;
 };
 
 

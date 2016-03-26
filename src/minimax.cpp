@@ -16,7 +16,7 @@ int dfs_count = 0;
 
 double pick(move & board, int depth, bool max, bool red){
     mm_count++;
-    if(depth == 0 || board.get_kids().size() <= 1)
+    if(depth == 0 || board.get_kids().size() <= 0)
        return board.get_score();
 
     if(max){
@@ -40,7 +40,7 @@ double pick(move & board, int depth, bool max, bool red){
 
 double alphabeta(move & board, int depth, double alpha, double beta, bool max, bool red){
     ab_count++;
-    if(depth == 0 || board.get_kids().size() <= 1)
+    if(depth == 0 || board.get_kids().size() <= 0)
         return board.get_score();
     
     if(max){
@@ -119,6 +119,7 @@ string minimax(string board_start, neuralNet & net, bool red){
     sort(rboards.begin(), rboards.end());
     auto e = steady_clock::now();
     auto diff = e - b;
+
     cout << "MM: " << rboards[rboards.size()-1].second << " " << mm_count << " " << std::chrono::duration<double>(diff).count() << endl;
     mm_count = 0;
     return rboards[rboards.size()-1].second;
@@ -172,6 +173,7 @@ string minimaxAB(string board_start, neuralNet & net, bool red){
     sort(rboards.begin(), rboards.end());
     auto e = steady_clock::now();
     auto diff = e - b;
+
     cout << "AB: " << rboards[rboards.size()-1].second << " " << ab_count << " " << std::chrono::duration<double>(diff).count() << endl;
     ab_count = 0;
     return rboards[rboards.size()-1].second;
@@ -181,15 +183,16 @@ string minimaxAB(string board_start, neuralNet & net, bool red){
 //DFS attempt
 double alphabeta_dfs(move & board, int depth, double alpha, double beta, bool max, bool red){
     dfs_count++;
+
     board.make_kids(red);
-    if(depth == 0 || board.get_kids().size() <= 1)
+
+    if(depth == 0 || board.get_kids().size() <= 0)
         return board.get_score();
     
     if(max){
         double r_score = -10000;
         for(auto & i : board.get_kids()){
-            i->make_kids(!red);
-            auto temp = alphabeta(*i, depth-1, alpha, beta, false, !red);
+            auto temp = alphabeta_dfs(*i, depth-1, alpha, beta, false, !red);
             if(temp > r_score)
                 r_score = temp;
             if(r_score > alpha)
@@ -201,8 +204,7 @@ double alphabeta_dfs(move & board, int depth, double alpha, double beta, bool ma
     }else{
         double r_score = 10000;
         for(auto & i : board.get_kids()){
-            i->make_kids(!red);
-            auto temp = alphabeta(*i, depth-1, alpha, beta, true, !red);
+            auto temp = alphabeta_dfs(*i, depth-1, alpha, beta, true, !red);
             if(temp < r_score)
                 r_score = temp;
             if(r_score < beta)
@@ -234,6 +236,7 @@ string minimax_dfs(string board_start, neuralNet & net, bool red){
     sort(rboards.begin(), rboards.end());
     auto e = steady_clock::now();
     auto diff = e - b;
+
     cout << "DF: " << rboards[rboards.size()-1].second << " " << dfs_count << " " << std::chrono::duration<double>(diff).count() << endl;
     dfs_count = 0;
     return rboards[rboards.size()-1].second;
