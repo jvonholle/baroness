@@ -33,6 +33,7 @@ void play(neuralNet & red, neuralNet & black,int pc, const int turns, const stri
     vector<string> game;
     game.clear(); 
     game.push_back(startB);
+    int too_long = 0;
     
     while(t_count < turns){
         
@@ -40,11 +41,9 @@ void play(neuralNet & red, neuralNet & black,int pc, const int turns, const stri
         
         auto temp = red.go(game[t_count], true);
 
-        if(pc == 1){ 
             e = steady_clock::now();
             diff = e - b;
             t_times.push_back(std::chrono::duration_cast<std::chrono::milliseconds>(diff).count()/1000.0);
-        }
         
         if(temp.second){
             game.push_back(temp.first);
@@ -53,12 +52,15 @@ void play(neuralNet & red, neuralNet & black,int pc, const int turns, const stri
             if(pc == 1)
                 cout << game[t_count] << " " << t_times[t_count-1] << " sec" << endl;
         }else{
-            if(pc == 1){
-                for(int i = 0; i<t_times.size(); ++i)
+            if(pc == 0 || pc == 1){
+                for(int i = 0; i<t_times.size(); ++i){
                     avg_t+= t_times[i];
+                    if(t_times[i]>15.0)
+                        too_long++;
+                }
                 avg_t = avg_t/t_times.size();
             
-                cout << "black wins, average turn time: " << avg_t << " ";
+                cout << "black wins, average turn time: " << avg_t << " with: " << too_long << " over 15 seconds" << endl;
             }
             black.set_score(3);
             red.set_score(-3);
@@ -81,19 +83,26 @@ void play(neuralNet & red, neuralNet & black,int pc, const int turns, const stri
                 cout << game[t_count] << " " << t_times[t_count-1] << " sec" << endl;
             }
         }else{
-            for(int i = 0; i<t_times.size(); ++i)
-                avg_t+= t_times[i];
-            avg_t = avg_t/t_times.size();
-            cout << "red wins, average turn time: " << avg_t << " ";
+            if(pc == 0 || pc == 1){
+                for(int i = 0; i<t_times.size(); ++i){
+                    avg_t+= t_times[i];
+                    if(t_times[i] > 15.0)
+                        too_long++;
+                }
+                avg_t = avg_t/t_times.size();
+                cout << "red wins, average turn time: " << avg_t << " with: " << too_long << " over 15 seconds " << endl;
+            }
             black.set_score(-3);
             red.set_score(3);
             return;
         }
     }
-    for(int i = 0; i<t_times.size(); ++i)
-                avg_t+= t_times[i];
-            avg_t = avg_t/t_times.size();
-    cout << "draw! average turn time: " << avg_t << " ";
+    if(pc == 0){
+        for(int i = 0; i<t_times.size(); ++i)
+            avg_t+= t_times[i];
+        avg_t = avg_t/t_times.size();
+        cout << "draw! average turn time: " << avg_t << " ";
+    }
     
     black.set_score(-1);
     red.set_score(-1);

@@ -56,8 +56,7 @@ public:
     //takes a string
     //returns a string
     //evaluates and alpha betas its way to the best move then returns that
-    //pair<string, bool> go(const string & board, bool red);
-    pair<string,bool> go(const string & board, bool red, string & ab);
+    pair<string, bool> go(const string & board, bool red);
 
     //set score
     //used to make scoring more thread safe

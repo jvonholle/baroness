@@ -1,6 +1,6 @@
 More timing
     -average time per turn
-    max time per turn
+    -count of turns over 15 seconds
     -average time per game
 
 -Change tourney
@@ -19,6 +19,9 @@ GUI
         progress through gen
         gen number
         button to save/quit/load
+
+DFS cut-off
+    return current best if 14.9 seconds have passed
 
 More saving
     current gen games
