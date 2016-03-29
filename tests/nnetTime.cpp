@@ -46,6 +46,7 @@ string randboard(){
 int main(){
     vector<double> blondieTestWeights;
     vector<string> testboards;
+    vector<double> scores;
     random_device rd;
     std::mt19937 ranGen(rd());
     normal_distribution<> d(0,1);
@@ -60,11 +61,16 @@ int main(){
 
     auto b = steady_clock::now();
     for(size_t i = 0; i< testboards.size(); ++i)
-        tester.evaluate(deString(testboards[i]));
+        scores.push_back(tester.evaluate(testboards[i], 1, 2, 0, (i%2 == 0)));
     auto e = steady_clock::now();
     auto diff = e-b;
     cout << "time: " << std::chrono::duration<double>(diff).count() << endl;
-
+    
+    cout << "scores: ";
+    for(auto i : scores){
+        cout << i <<" ";
+    }
+    cout << endl;
     b = steady_clock::now();
     tester.evolve("output", [&](double a){return a;});
     e = steady_clock::now();

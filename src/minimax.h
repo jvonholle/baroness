@@ -12,27 +12,27 @@ using std::make_shared;
 #include <algorithm>
 
 
-struct move{
+struct move_node{
 public:
-    move(string board, neuralNet & net):current_(board),net_(make_shared<neuralNet>(net))
+    move_node(string board, neuralNet & net):current_(board),net_(make_shared<neuralNet>(net))
     {}
-    move(string board, shared_ptr<neuralNet> net, bool red):current_(board),net_(net)
-    { score_ = net_->evaluate(board, red); } 
+    move_node(string board, shared_ptr<neuralNet> net, bool red):current_(board),net_(net)
+    { score_ = net_->evaluate(current_, 1, 2, 0, red); } 
             
 
     void make_kids(bool red){
         auto temp = getBoardsN({current_}, red);
-        if(temp.size() > 1){
-            for(int i = 1; i < temp.size(); ++i){
-                kids_.push_back(make_shared<move>(move(temp[i],net_,red)));
+        if(temp.size() > 0){
+            for(int i = 0; i < temp.size(); ++i){
+                kids_.push_back(make_shared<move_node>(move_node(temp[i],net_,red)));
             }
-            std::sort(kids_.begin(), kids_.end(), [&](shared_ptr<move> a, shared_ptr<move> b){return (a->get_score()>b->get_score());});
+            std::sort(kids_.begin(), kids_.end(), [&](shared_ptr<move_node> a, shared_ptr<move_node> b){return (a->get_score()>b->get_score());});
         }
         else
             return;
     }
 
-    vector<shared_ptr<move> > get_kids(){
+    vector<shared_ptr<move_node> > get_kids(){
         return kids_;
     }double get_score(){
         return score_;
@@ -40,16 +40,21 @@ public:
         return current_;
     }shared_ptr<neuralNet> get_net(){
         return net_;
+    }void sort_kids(){
+        std::sort(kids_.begin(), kids_.end(), [&](shared_ptr<move_node> a, shared_ptr<move_node> b){return (a->get_score()>b->get_score());});
+    }void set_score(double i){
+        score_ = i;
     }
 
 private:
-    vector<shared_ptr<move> > kids_;
+    vector<shared_ptr<move_node> > kids_;
     string current_;
     double score_;
     shared_ptr<neuralNet> net_;
 };
 
 
-string minimax(string board_start, neuralNet & net, bool red);
+string minimax(const string & board_start, neuralNet & net, const bool & red);
+// string minimax_noloop(const string & board_start, neuralNet & net, const bool & red);
 
 #endif

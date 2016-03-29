@@ -64,10 +64,10 @@ vector<double> deString(string board, bool red, double king = 1.5){
 inline static double sigmoid(double sum, const double a, double b, const double c){
     if(b==0)
         b=1;
-    if(sum < 0)
+    if(sum > 0)
         return (a/(1.0+exp(sum/b)))+c;
     else
-        return (a/(1.0+exp((sum*-1))))+c;
+        return (a/(1.0+exp((sum*-1)/b)))+c;
 }
 
 neuralNet::neuralNet(const string & path){
@@ -174,13 +174,24 @@ void neuralNet::evolve(const string & path, function<double(double)> evolver){
   writeNet.close(); 
 }
 
- pair<string,bool> neuralNet::go(const string & board, bool red){
+pair<string,bool> neuralNet::go(const string & board, bool red){
      string rstring = minimax(board, *this, red); 
      bool rbool = (rstring != "end");
 
      return make_pair(rstring, rbool);
- }
+}
 
+// pair<string,bool> neuralNet::go(const string & board, bool red, bool loop){
+//     if(loop){
+//          string rstring = minimax(board, *this, red); 
+//          bool rbool = (rstring != "end");
+//          return make_pair(rstring, rbool);
+//     }else{
+//         string rstring = minimax_noloop(board, *this, red);
+//         bool rbool = (rstring != "end");
+//         return make_pair(rstring, rbool);
+//     }
+// }
 
 void neuralNet::makeNodeLevels(){
     nodeLevels_.clear();

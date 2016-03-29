@@ -30,8 +30,10 @@ string randboard(){
 int main(){
     
     vector<double> startW;
-    vector<string> game;
-    game.push_back(randboard());
+    vector<string> game_df;
+    vector<string> game_nl;
+    game_df.push_back(randboard());
+    game_nl.push_back(randboard());
     random_device rd;
     mt19937 randomG(rd());
     int t_count = 0;
@@ -48,30 +50,27 @@ int main(){
         
         
     neuralNet black({32,40,40,20,1}, startW);
-    string mm = "mm";
-    string ab = "ab";
-    string dfs = "dfs";
     
         
     while(t_count < 200){
-        
-        auto temp_mm = red.go(game[t_count], true, mm);
-        auto temp_ab = red.go(game[t_count], true, ab);
-        auto temp_df = red.go(game[t_count], true, dfs);
+        cout << "red" << endl;
+        auto temp_df = red.go(game_df[t_count], true, true);
+        auto temp_nl = red.go(game_nl[t_count], true, false);
 
-        if(temp_mm.second && temp_ab.second && temp_df.second){
-            game.push_back(temp_ab.first);
+        if(temp_df.second && temp_nl.second){
+            game_df.push_back(temp_df.first);
+            game_nl.push_back(temp_nl.first);
             t_count++;
         }else{
             return 0;
         }
-        
-        temp_mm = black.go(game[t_count], false, mm);
-        temp_ab = black.go(game[t_count], false, ab);
-        temp_df = black.go(game[t_count], false, dfs);
+        cout << "black" << endl;
+        temp_df = black.go(game_df[t_count], false, true);
+        temp_nl = black.go(game_nl[t_count], false, false);
 
-        if(temp_mm.second && temp_ab.second && temp_df.second){
-            game.push_back(temp_ab.first);
+        if(temp_df.second && temp_nl.second){
+            game_df.push_back(temp_df.first);
+            game_nl.push_back(temp_nl.first);
             t_count++;
         }else{
             return 0;
