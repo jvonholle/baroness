@@ -1,10 +1,13 @@
-#define CATCH_CONFIG_MAIN
-#include "catch.hpp"
-#include "../src/nnet.h"
+// #include "../src/nnet.h"
+#include "../src/minimax.h"
 #include <random>
 using std::random_device;
 using std::mt19937;
 #include <algorithm>
+#include <iostream>
+using std::cout;
+using std::endl;
+
 
 string randboard(){
     string board = "rrrrrrrrrrrr________bbbbbbbbbbbb";
@@ -24,7 +27,7 @@ string randboard(){
     return board;
 } 
 
-TEST_CASE("Testing depth 6"){
+int main(){
     
     vector<double> startW;
     vector<string> game;
@@ -45,33 +48,33 @@ TEST_CASE("Testing depth 6"){
         
         
     neuralNet black({32,40,40,20,1}, startW);
+    string mm = "mm";
+    string ab = "ab";
+    string dfs = "dfs";
     
         
     while(t_count < 200){
-        auto temp_mm = red.go(game[t_count], true, false);
-        auto temp_ab = red.go(game[t_count], true, true);        
-        REQUIRE(temp_mm.first == temp_ab.first);
-        REQUIRE(temp_mm.second == temp_ab.second);
+        
+        auto temp_mm = red.go(game[t_count], true, mm);
+        auto temp_ab = red.go(game[t_count], true, ab);
+        auto temp_df = red.go(game[t_count], true, dfs);
 
-        if(temp_mm.second && temp_ab.second){
+        if(temp_mm.second && temp_ab.second && temp_df.second){
             game.push_back(temp_ab.first);
             t_count++;
         }else{
-            break;
+            return 0;
         }
+        
+        temp_mm = black.go(game[t_count], false, mm);
+        temp_ab = black.go(game[t_count], false, ab);
+        temp_df = black.go(game[t_count], false, dfs);
 
-        
-        temp_mm = black.go(game[t_count], true, false);
-        temp_ab = black.go(game[t_count], true, true);        
-        REQUIRE(temp_mm.first == temp_ab.first);
-        REQUIRE(temp_mm.second == temp_ab.second);
-        
-        
-        if(temp_mm.second && temp_ab.second){
+        if(temp_mm.second && temp_ab.second && temp_df.second){
             game.push_back(temp_ab.first);
             t_count++;
         }else{
-            break;
+            return 0;
         }
     }    
 }
