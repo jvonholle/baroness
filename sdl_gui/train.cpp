@@ -18,6 +18,12 @@ using std::size_t;
 using std::cout;
 using std::endl;
 
+// SDL STUFF 
+#include <SDL2/SDL.h>
+const int S_H = 640;
+const int S_W = 640;
+
+
 void save(vector<neuralNet> & nets){
     string path = "saved/";
     for(int i = 0; i < nets.size(); ++i){
@@ -79,7 +85,27 @@ void load(vector<neuralNet> & nets, const int & check, const int & quant){
     }
 }
 
-int main(){
+int main(int argc, char* args[]){
+    //SDL WINDOW
+    SDL_Window* window = nullptr;
+    SDL_Surface* screen_surface = nullptr;
+    //END SDL WINDOW
+    //
+    //SDL INIT
+    if(SDL_Init(SDL_INIT_VIDEO)<0)
+        printf("SDL could not initialize! SDL_Error: %s\n",SDL_GetError());
+    else{
+        window = SDL_CreateWindow("Baroness", SDL_WINDOW_POS_UNDEFINED, SDL_WINDOW_POS_UNDEFINED, S_W, S_H, SDL_WINDOW_SHOWN);
+        if(window == nullptr)
+            printf("Window could not initialize! SDL_Error: %s\n",SDL_GetError());
+        else{
+            screenSurface = SDL_GetWindowSurface(window);
+            SDL_FILLRect(screenSurface, NULL, SDL_MapRGB(screenSruface->format, 0xFF,0xFF,0xFF));
+            SDL_UpdateWindowSurface(window);
+            SDL_Delay(2000);
+        }
+    }
+
     vector<neuralNet> nets;
     vector<double> startW;
     string filepath = "out";

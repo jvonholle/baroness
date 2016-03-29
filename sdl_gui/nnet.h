@@ -57,17 +57,6 @@ public:
     //returns a string
     //evaluates and alpha betas its way to the best move then returns that
     pair<string, bool> go(const string & board, bool red);
-    // pair<string, bool> go(const string & board, bool red, bool loop);
-
-    //set score
-    //used to make scoring more thread safe
-    void set_score(const int & i){
-        score=i;}
-
-    //get score
-    //used to make scoring more thread safe
-    int get_score(){
-        return score;}
 
 private:
     
@@ -78,8 +67,6 @@ private:
    
     void makeNodeLevels();
     void setWeights(const vector<double> & weights);
-    
-    int score;
 
     vector<size_t> levels_;
     vector<vector<node_> > nodeLevels_;
