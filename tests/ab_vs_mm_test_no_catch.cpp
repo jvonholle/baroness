@@ -53,23 +53,17 @@ int main(){
     
         
     while(t_count < 200){
-        cout << "red" << endl;
-        auto temp_df = red.go(game_df[t_count], true, true);
-        auto temp_nl = red.go(game_nl[t_count], true, false);
+        auto temp_nl = red.go(game_nl[t_count], true);
 
-        if(temp_df.second && temp_nl.second){
-            game_df.push_back(temp_df.first);
+        if(temp_nl.second){
             game_nl.push_back(temp_nl.first);
             t_count++;
         }else{
             return 0;
         }
-        cout << "black" << endl;
-        temp_df = black.go(game_df[t_count], false, true);
-        temp_nl = black.go(game_nl[t_count], false, false);
+        temp_nl = black.go(game_nl[t_count], false);
 
-        if(temp_df.second && temp_nl.second){
-            game_df.push_back(temp_df.first);
+        if(temp_nl.second){
             game_nl.push_back(temp_nl.first);
             t_count++;
         }else{

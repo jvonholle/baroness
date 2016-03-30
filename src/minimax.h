@@ -21,6 +21,8 @@ public:
             
 
     void make_kids(bool red){
+        if(kids_.size()>0)
+            return;
         auto temp = getBoardsN({current_}, red);
         if(temp.size() > 0){
             for(int i = 0; i < temp.size(); ++i){

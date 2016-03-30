@@ -71,14 +71,14 @@ pair<int, vector<neuralNet> > single(vector<neuralNet> & nets, const int & gen, 
 
 //        cout << r_net[net_i] << " vs " << r_net[net_j] << " ";
 //        b = steady_clock::now();
-        play(nets[r_net[net_i]], nets[r_net[net_j]], print_check, 200);
+        // play(nets[r_net[net_i]], nets[r_net[net_j]], print_check, 200);
 //        e = steady_clock::now();
 //        diff = e - b;
 //        cout << "time: " << std::chrono::duration<double>(diff).count() << endl;
 
 //        cout << r_net[net_j] << " vs " << r_net[net_i] << " ";
 //        b = steady_clock::now();
-        play(nets[r_net[net_j]], nets[r_net[net_i]], print_check, 200);
+        // play(nets[r_net[net_j]], nets[r_net[net_i]], print_check, 200);
 //        e = steady_clock::now();
 //        diff = e - b;
 //        cout << "time: " << std::chrono::duration<double>(diff).count() << endl;
@@ -86,7 +86,7 @@ pair<int, vector<neuralNet> > single(vector<neuralNet> & nets, const int & gen, 
 
 //        cout << r_net[net_i] << " vs " << r_net[net_j] << " ";
 //        b = steady_clock::now();
-        play(nets[r_net[net_i]], nets[r_net[net_j]], print_check, 200, temp);
+        // play(nets[r_net[net_i]], nets[r_net[net_j]], print_check, 200, temp);
 //        e = steady_clock::now();
 //        diff = e - b;
 //        cout << "time: " << std::chrono::duration<double>(diff).count() << endl;
