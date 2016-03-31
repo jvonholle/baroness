@@ -32,7 +32,7 @@ string rstartB(bool red, string s_board = "rrrrrrrrrrrr________bbbbbbbbbbbb"){
     random_device d;
     mt19937 rand(d());
     auto boards = getBoardsN({s_board},red);
-    auto p_board = std::uniform_int_distribution<>(1, (boards.size()-1));
+    auto p_board = std::uniform_int_distribution<>(0, (boards.size()-1));
     return(boards[p_board(rand)]);
 }
 
@@ -67,7 +67,9 @@ pair<int, vector<neuralNet> > single(vector<neuralNet> & nets, const int & gen, 
     auto diff = e - b;
 
     while(net_i < net_j){
-        string temp = rstartB(true);
+        string temp = rstartB(false);
+        temp = rstartB(true, temp); 
+
 
 //        cout << r_net[net_i] << " vs " << r_net[net_j] << " ";
 //        b = steady_clock::now();
@@ -86,12 +88,11 @@ pair<int, vector<neuralNet> > single(vector<neuralNet> & nets, const int & gen, 
 
 //        cout << r_net[net_i] << " vs " << r_net[net_j] << " ";
 //        b = steady_clock::now();
-        // play(nets[r_net[net_i]], nets[r_net[net_j]], print_check, 200, temp);
+        play(nets[r_net[net_i]], nets[r_net[net_j]], print_check, 200, temp);
 //        e = steady_clock::now();
 //        diff = e - b;
 //        cout << "time: " << std::chrono::duration<double>(diff).count() << endl;
        
-        temp = rstartB(false, temp); 
         
 //        cout << r_net[net_j] << " vs " << r_net[net_i] << " ";
 //        b = steady_clock::now();

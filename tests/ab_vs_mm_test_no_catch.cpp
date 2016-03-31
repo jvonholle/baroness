@@ -59,6 +59,7 @@ int main(){
             game_nl.push_back(temp_nl.first);
             t_count++;
         }else{
+            cout << "done." << endl;
             return 0;
         }
         temp_nl = black.go(game_nl[t_count], false);
@@ -67,6 +68,7 @@ int main(){
             game_nl.push_back(temp_nl.first);
             t_count++;
         }else{
+            cout << "done." << endl;
             return 0;
         }
     }    

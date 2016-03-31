@@ -17,8 +17,12 @@ int dfs_count = 0;
 int nl_count = 0;
 //END DEBUG
 
+//alphabeta_dfs
+//depth-first minimax searc with alpha-beta pruning of children of the passed node
+//takes a node, int for how deep to go, alpha & beta values, bool for max, bool for player side and time cuttoff
+//returns best score it can find
 tuple<double, double, double> alphabeta_dfs(move_node & board, const int & depth, double alpha, double beta, const bool & max, const bool & red, const double & cuttoff){
-    dfs_count++;
+    // dfs_count++;
     auto b = steady_clock::now();
     
 
@@ -55,6 +59,15 @@ tuple<double, double, double> alphabeta_dfs(move_node & board, const int & depth
     }
 }
 
+//alphabeta_id
+//iteraterative deepening depth-fisrt search of children of passed node, iterates based on time, goal is to go as deep as possible in under 15 seconds
+//takes move_node, preferable the head node from current board, and a bool for the side the player is
+//  depth - keeps track of deptht to call dfs with, increases as loop goes on
+//  timec - current time elapsed from start as a double, set many times to stay accurate
+//  b - begin time
+//  turnt - time of last turn, used to estimate if another dfs can be called
+//  timeR - variable to pass as cuttoff for dfs function, mainly helper to stay DRY
+//sets children to values returned by dfs
 void alphabeta_id(move_node & board, const bool & red){
     nl_count++;
     auto b = steady_clock::now();
@@ -62,93 +75,64 @@ void alphabeta_id(move_node & board, const bool & red){
     double timec = (std::chrono::duration_cast<std::chrono::milliseconds>(steady_clock::now()-b).count()/1000.0);
     board.make_kids(red);
     double turnt =0;
+    double timeR = 13.6;
    
     if(board.get_kids().size() <= 1)
         return;
     
     do{
         timec = (std::chrono::duration_cast<std::chrono::milliseconds>(steady_clock::now()-b).count()/1000.0);
+       // timeR -= timec;
         turnt = timec;
         
-        auto temp = alphabeta_dfs(*board.get_kids()[0], depth, -10000, 10000, true, red, (13.5-timec));
+        auto temp = alphabeta_dfs(*board.get_kids()[0], depth, -10000, 10000, true, red, (timeR-timec));
         board.get_kids()[0]->set_score(get<0>(temp));
         
         timec = (std::chrono::duration_cast<std::chrono::milliseconds>(steady_clock::now()-b).count()/1000.0);
+       // timeR -= timec;
         turnt = timec - turnt;
         
         for(int i = 1; i < board.get_kids().size(); ++i){
             timec = (std::chrono::duration_cast<std::chrono::milliseconds>(steady_clock::now()-b).count()/1000.0);
+            // timeR -= timec;
             if(timec+turnt >= 14.7)
                 break;
             turnt = timec;
-            temp = alphabeta_dfs(*board.get_kids()[i], depth, get<1>(temp), get<2>(temp), true, red, (13.5-timec));
+            temp = alphabeta_dfs(*board.get_kids()[i], depth, get<1>(temp), get<2>(temp), true, red, (timeR-timec));
             board.get_kids()[i]->set_score(get<0>(temp));
             
             timec = (std::chrono::duration_cast<std::chrono::milliseconds>(steady_clock::now()-b).count()/1000.0);
+            // timeR -= timec;
             turnt = timec - turnt;
             if(timec >= 14.7)
                 break;
         }
         depth++;
         timec = (std::chrono::duration_cast<std::chrono::milliseconds>(steady_clock::now()-b).count()/1000.0);
-    }while(timec+turnt <= 14.6);
+        board.sort_kids();
+    }while(timec+turnt <= 14.6 && timeR>=1.4);
 }
 
-
-
-// string minimax(const string & board_start, neuralNet & net, const bool & red){
-//     auto b = steady_clock::now();
-//     move_node head(board_start, net);
-//     head.make_kids(red);
-   
-//     if(head.get_kids().size() == 1){
-//         auto e = steady_clock::now();
-//         auto diff = e - b;
-//         cout << "DF: " << head.get_kids()[0]->get_current() <<" "<< head.get_kids()[0]->get_score() <<" "<< dfs_count << " " << std::chrono::duration<double>(diff).count() << endl;
-//         return head.get_kids()[0]->get_current();
-//     }
-//     if(head.get_kids().size() <= 0){
-//         auto e = steady_clock::now();
-//         auto diff = e - b;
-//         cout << "DF: end "<< dfs_count << " " << std::chrono::duration<double>(diff).count() << endl;
-//         return "end";
-//     }
-        
-//     for(auto & i : head.get_kids())
-//         i->set_score(alphabeta_dfs(*i, 4, -10000, 10000, true, !red, (std::chrono::duration_cast<std::chrono::milliseconds>(steady_clock::now()-b).count()/1000)));
- 
-//     head.sort_kids();
-    
-//     // auto e = steady_clock::now();
-//     // auto diff = e - b;
-    
-//     // cout << "DF: " << head.get_kids()[0]->get_current() <<" "<< head.get_kids()[0]->get_score() <<" "<< dfs_count << " " << std::chrono::duration<double>(diff).count() << endl;
-//     // dfs_count = 0;
-//     return head.get_kids()[0]->get_current();
-// }
-
+//
 string minimax(const string & board_start, neuralNet & net, const bool & red){
     auto b = steady_clock::now();
     move_node head(board_start, net);
+    move_node test_head(board_start, net);
         
     alphabeta_id(head,red);
     
-    if(head.get_kids().size() <= 0){
-        auto e = steady_clock::now();
-        auto diff = e - b;
-        cout << "NL: end "<< nl_count+dfs_count << " " << std::chrono::duration<double>(diff).count() << endl;
+    if(head.get_kids().size() <= 0)
         return "end";
-    }
         
     head.sort_kids();
     auto e = steady_clock::now();
-    auto diff = e - b;
- 
-    cout << head.get_kids()[0]->get_current(); 
-    if(std::chrono::duration<double>(diff).count() >= 15.0)
-        cout << "!";
-    cout << endl;
-    nl_count = 0;
-    dfs_count = 0;
+    auto diff = e-b;
+    
+    // cout << head.get_kids()[0]->get_current();
+    // if(std::chrono::duration<double>(diff).count() >= 15.0)
+    //     cout << "!" << std::chrono::duration<double>(diff).count();
+    // cout << endl;
+    // nl_count = 0;
+    // dfs_count = 0;
     return head.get_kids()[0]->get_current();
 }
