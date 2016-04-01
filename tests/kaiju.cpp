@@ -137,20 +137,15 @@ pair<string, bool> kaiju::go(const string & board, bool red){
             toeval.push_back(eight_[i]->evaluate(temp));
         }
         
-        kid->make_kids(!red);
+        auto temp = alphabeta_dfs(*kid, 5, -10000, 10000, true, red, 10);
+        double tempscore = 0;
         
-        auto temp = alphabeta_dfs(*kid->get_kids()[0], 5, -10000, 10000, true, red, 10);
-        kid->get_kids()[0]->set_score(get<0>(temp));
-        
-        for(int i = 1; i < kid->get_kids().size(); ++i) {
-            temp = alphabeta_dfs(*kid->get_kids()[i], 5, get<1>(temp), get<2>(temp), true, red, 10);
-            kid->get_kids()[i]->set_score(get<0>(temp));
-            
-        }
+        for(int i = 0; i < kid->get_kids().size(); ++i)
+            tempscore+= kid->get_kids()[i]->get_score();
         
         kid->sort_kids();
-        allinputs.push_back(kid->get_kids()[0]->get_score());
-        toeval.push_back(kid->get_kids()[0]->get_score());
+        allinputs.push_back(tempscore);
+        toeval.push_back(get<0>(temp));
         toeval.push_back(allinput_->evaluate(allinputs, 1, 2, 0));
         kid->set_score(main_->evaluate(toeval, 1, 2, 0));
     }
