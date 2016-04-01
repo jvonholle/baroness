@@ -12,6 +12,8 @@ using std::function;
 #include <utility>
 using std::pair;
 
+vector<double> deString(string board, bool red, double king = 1.5);
+
 class neuralNet{
 public:
     //Two param ctor

@@ -30,10 +30,10 @@ using std::endl;
 //end debug
 
 
-vector<double> deString(string board, bool red, double king = 1.5){
+vector<double> deString(string board, bool red, double king){
     vector<double> rvec;
     if(red){
-        for(int i = 0; i < 32; ++i){
+        for(int i = 0; i < board.length(); ++i){
             switch(board[i]){
                 case 'r' : rvec.push_back(1); break;
                 case 'b' : rvec.push_back(-1); break;
@@ -45,7 +45,7 @@ vector<double> deString(string board, bool red, double king = 1.5){
         }
         return rvec;
     }else{
-        for(int i = 0; i < 32; ++i){
+        for(int i = 0; i < board.length(); ++i){
             switch(board[i]){
                 case 'r' : rvec.push_back(-1); break;
                 case 'b' : rvec.push_back(1); break;

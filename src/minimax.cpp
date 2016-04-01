@@ -128,11 +128,11 @@ string minimax(const string & board_start, neuralNet & net, const bool & red){
     auto e = steady_clock::now();
     auto diff = e-b;
     
-    // cout << head.get_kids()[0]->get_current();
-    // if(std::chrono::duration<double>(diff).count() >= 15.0)
-    //     cout << "!" << std::chrono::duration<double>(diff).count();
-    // cout << endl;
-    // nl_count = 0;
-    // dfs_count = 0;
+    cout << head.get_kids()[0]->get_current();
+    if(std::chrono::duration<double>(diff).count() >= 15.0)
+        cout << "!" << std::chrono::duration<double>(diff).count();
+    cout << endl;
+    nl_count = 0;
+    dfs_count = 0;
     return head.get_kids()[0]->get_current();
 }
