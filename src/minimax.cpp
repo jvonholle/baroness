@@ -75,7 +75,7 @@ void alphabeta_id(move_node & board, const bool & red){
     double timec = (std::chrono::duration_cast<std::chrono::milliseconds>(steady_clock::now()-b).count()/1000.0);
     board.make_kids(red);
     double turnt =0;
-    double timeR = 13.6;
+    double timeR = 8.6;
    
     if(board.get_kids().size() <= 1)
         return;
@@ -128,11 +128,11 @@ string minimax(const string & board_start, neuralNet & net, const bool & red){
     auto e = steady_clock::now();
     auto diff = e-b;
     
-    cout << head.get_kids()[0]->get_current();
+/*    cout << head.get_kids()[0]->get_current();
     if(std::chrono::duration<double>(diff).count() >= 15.0)
         cout << "!" << std::chrono::duration<double>(diff).count();
     cout << endl;
     nl_count = 0;
-    dfs_count = 0;
+    dfs_count = 0;*/
     return head.get_kids()[0]->get_current();
 }

@@ -71,64 +71,32 @@ pair<int, vector<neuralNet> > single(vector<neuralNet> & nets, const int & gen, 
         temp = rstartB(true, temp); 
 
 
-//        cout << r_net[net_i] << " vs " << r_net[net_j] << " ";
-//        b = steady_clock::now();
-        // play(nets[r_net[net_i]], nets[r_net[net_j]], print_check, 200);
-//        e = steady_clock::now();
-//        diff = e - b;
-//        cout << "time: " << std::chrono::duration<double>(diff).count() << endl;
-
-//        cout << r_net[net_j] << " vs " << r_net[net_i] << " ";
-//        b = steady_clock::now();
-        // play(nets[r_net[net_j]], nets[r_net[net_i]], print_check, 200);
-//        e = steady_clock::now();
-//        diff = e - b;
-//        cout << "time: " << std::chrono::duration<double>(diff).count() << endl;
-        
-
-//        cout << r_net[net_i] << " vs " << r_net[net_j] << " ";
-//        b = steady_clock::now();
         play(nets[r_net[net_i]], nets[r_net[net_j]], print_check, 200, temp);
-//        e = steady_clock::now();
-//        diff = e - b;
-//        cout << "time: " << std::chrono::duration<double>(diff).count() << endl;
        
-        
-//        cout << r_net[net_j] << " vs " << r_net[net_i] << " ";
-//        b = steady_clock::now();
         play(nets[r_net[net_j]], nets[r_net[net_i]], print_check, 200, temp);
-//        e = steady_clock::now();
-//        diff = e - b;
-//        cout << "time: " << std::chrono::duration<double>(diff).count() << endl;
 
-//        cout << r_net[net_i] << " vs " << r_net[net_j] << " ";
-//        b = steady_clock::now();
         int temp_int = (net_i * net_j +13 / 4);
         if(temp_int % 2 == 0)
             play(nets[r_net[net_i]], nets[r_net[net_j]], print_check, 200);
         else
             play(nets[r_net[net_j]], nets[r_net[net_i]], print_check, 200);
-//        e = steady_clock::now();
-//        diff = e - b;
-//        cout << "time: " << std::chrono::duration<double>(diff).count() << endl;
+
         net_i++;
         net_j = nets.size()-(net_i+1);
     }
 
-    int kids = 0;
     int mean;
     int tot = 0;
-    int pc = 0;
+    int off_count = 0;
     vector<neuralNet> worthy;
     path = "out";
 
-    for(int i = 0; i < playedBoards.size(); ++i){
-        if(nets[i].get_score() > 0){
-            playedBoards[i].second.evolve(path+=std::to_string(pc), evolutionize);
+    for(int i = 0; i < nets.size(); ++i){
+        if(nets[i].get_score() >= 0){
+            nets[i].evolve(path+=std::to_string(off_count), evolutionize);
             path = "out";
             worthy.push_back(nets[i]);
-            kids++;
-            pc++;
+            off_count++;
         }
     }
 
@@ -142,5 +110,5 @@ pair<int, vector<neuralNet> > single(vector<neuralNet> & nets, const int & gen, 
         if(worthy[i].get_score() > mean)
             rNets.push_back(worthy[i]);
 
-    return make_pair(kids, rNets);
+    return make_pair(off_count, rNets);
 }

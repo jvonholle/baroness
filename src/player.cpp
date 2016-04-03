@@ -34,7 +34,7 @@ void play(neuralNet & red, neuralNet & black,int pc, const int turns, const stri
     game.clear(); 
     game.push_back(startB);
     if(pc == 1){
-        cout << game[t_count] <</* " " << t_times[t_count-1] << " sec" << */endl;
+        cout << game[t_count] << endl;
     }
     while(t_count < turns){
             
@@ -49,9 +49,8 @@ void play(neuralNet & red, neuralNet & black,int pc, const int turns, const stri
         if(temp.second){
             game.push_back(temp.first);
             t_count++;
-            //cout << "red move:" << endl;
             if(pc == 1)
-                cout << game[t_count] << /*" " << t_times[t_count-1] << " sec" << */endl;
+                cout << game[t_count] << endl;
         }else{
             if(pc == 0 || pc == 1){
                 double too_long = 0.0;
@@ -100,11 +99,15 @@ void play(neuralNet & red, neuralNet & black,int pc, const int turns, const stri
             return;
         }
     }
-    if(pc == 0){
-        for(int i = 0; i<t_times.size(); ++i)
+    if(pc == 0 || pc == 1){
+        double too_long = 0.0;
+        for(int i = 0; i<t_times.size(); ++i){
             avg_t+= t_times[i];
+            if(t_times[i] > 15.0)
+                too_long++;
+        } 
         avg_t = avg_t/t_times.size();
-        cout << "draw! average turn time: " << avg_t << " ";
+        cout << "draw! average turn time: " << avg_t << " with: " << (too_long/t_times.size())*100 << "\% over 15 seconds " << endl;
     }
     
     black.set_score(-1);

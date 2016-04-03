@@ -28,4 +28,7 @@ More saving
     top net - labeled
     stats
         timing, average score, survivors
-
+Kaiju training
+    evolve
+    overload play to allow tournaments with kaiju and nets
+    start soon

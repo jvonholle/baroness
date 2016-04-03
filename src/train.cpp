@@ -90,14 +90,14 @@ int main(){
     int num_nets;
     auto d = std::uniform_real_distribution<> (-1,1);
 
-    cout << "1 for new random gen, 3 to load last saved, 4 to load last used gen" << endl << "> ";
+    cout << "1 for new random gen, 4 to load last gen" << endl << "> ";
     std::cin >> check;
-    if(check == 3 || check == 4){
+    if(check == 4){
         cout << "how many nets to load? if not sure use 100" << endl << "> ";
         std::cin >> num_nets;
         load(nets, check, num_nets);
     }else{ 
-        for(int i = 0; i < 100; ++i){
+        for(int i = 0; i < 50; ++i){
             startW.clear();
             randomG.seed(rd());
             for(int j = 0; j < 3700; ++j)
@@ -113,12 +113,14 @@ int main(){
     auto b = steady_clock::now();
 
     auto count = single(nets, -1, check); 
+
     auto e = steady_clock::now();
     auto diff = e - b;
     cout << "gen: " << -1 << endl
         << "time: " << std::chrono::duration<double>(diff).count() << " seconds" << endl
         << "offspring: " << count.first << endl
         << "survivors: " << count.second.size() << endl;
+
     while(true){
 
         b = steady_clock::now();
@@ -129,8 +131,8 @@ int main(){
             nets.push_back(neuralNet(filepath+=std::to_string(i)));
             filepath = "out";
         }
-        if(nets.size() < 100){
-            int temp = 100 - nets.size();
+        if(nets.size() < 50){
+            int temp = 50 - nets.size();
             for(int i = 0; i < temp; ++i){
                 startW.clear();
                 for(int j = 0; j < 3700; ++j)

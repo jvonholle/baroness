@@ -64,7 +64,7 @@ public:
     //set score
     //used to make scoring more thread safe
     void set_score(const int & i){
-        score=i;}
+        score+=i;}
 
     //get score
     //used to make scoring more thread safe
@@ -81,7 +81,7 @@ private:
     void makeNodeLevels();
     void setWeights(const vector<double> & weights);
     
-    int score;
+    int score = 0;
 
     vector<size_t> levels_;
     vector<vector<node_> > nodeLevels_;
