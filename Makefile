@@ -23,7 +23,7 @@ kaiju: tests/kaiju_test.cpp
 #Play checkers
 
 trainop: src/train.cpp
-	g++ -pthread -O3 -Ofast -std=c++11 src/movement.cpp src/movement.h src/nnet.cpp src/nnet.h src/player.cpp src/player.h src/tourney.cpp src/tourney.h src/train.cpp src/minimax.cpp src/minimax.h -o baroness_train
+	g++ -pthread -O3 -Ofast -std=c++11 src/movement.cpp src/movement.h src/nnet.cpp src/nnet.h src/player.cpp src/player.h src/tourney.cpp src/tourney.h src/train.cpp src/minimax.cpp src/minimax.h src/kaiju.cpp src/kaiju.h -o baroness_train
 
 .PHONY: clean
 clean:

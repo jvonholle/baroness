@@ -12,11 +12,13 @@ using std::pair;
 using std::make_pair;
 #include <tuple>
 using std::get;
+#include <cstdlib>
+using std::system;
 
 #include <chrono>
 using std::chrono::steady_clock;
 
-kaiju::kaiju(const int & depth){
+kaiju::kaiju(const char & useless){
     vector<double> weights;
     random_device rd;
     mt19937 randomG(rd());
@@ -54,6 +56,101 @@ kaiju::kaiju(const int & depth){
     allinput_ = move(temp2);
 }
 
+kaiju::kaiju(const int & count){
+    string path = "kaiju/";
+    if(count < 10)
+        path += "0";
+    path += std::to_string(count);
+    path += "/";
+    string dir_path = path;
+    
+    path += "head";
+    unique_ptr<neuralNet> temp(new neuralNet(path));
+    head_ = move(temp);
+    
+    path = dir_path;
+    path += "main";
+    unique_ptr<neuralNet> temp1(new neuralNet(path));
+    main_ = move(temp1);
+    
+    path = dir_path;
+    path += "allinput";
+    unique_ptr<neuralNet> temp2(new neuralNet(path));
+    allinput_ = move(temp2);
+    
+    path = dir_path;
+    for(int i = 0; i < 4; ++i){
+        path += "eight0";
+        path += std::to_string(i);
+        unique_ptr<neuralNet> temp8s(new neuralNet(path));
+        eight_.push_back(move(temp8s));
+        path = dir_path;
+    }
+    
+    path = dir_path;
+    for(int i = 0; i < 8; ++i){
+        path += "four0";
+        path += std::to_string(i);
+        unique_ptr<neuralNet> temp4s(new neuralNet(path));
+        four_.push_back(move(temp4s));
+        path = dir_path;
+    }
+    
+}
+
+bool kaiju::evolve(const int & count, function<double(double)> evolver, const int & cuttoff){
+    if(score_ < cuttoff)
+        return false;
+        
+    bool done = true;
+    string path = "kaiju/";
+    if(count < 10)
+        path += "0";
+    path += std::to_string(count);
+    path += "/";
+    string dir_path = path;
+    
+    do{
+        done = true;
+        try{
+            path = dir_path;
+            path += "head";
+            head_->evolve(path, evolver);
+            
+            path = dir_path;
+            path += "main";
+            main_->evolve(path, evolver);
+            
+            path = dir_path;
+            path += "allinput";
+            allinput_->evolve(path, evolver);
+            
+            path = dir_path;
+            for(int i = 0 ; i < 4; ++i){
+                path += "eight0";
+                path += std::to_string(i);
+                eight_[i]->evolve(path, evolver);
+                path = dir_path;
+            }
+            
+            path = dir_path;
+            for(int i = 0; i < 8; ++i){
+                path += "four0";
+                path += std::to_string(i);
+                four_[i]->evolve(path, evolver);
+                path = dir_path;
+            }
+        }catch(...){
+            string dir_make = "mkdir ";
+            dir_make += dir_path;
+            int throwaway = system(dir_make.c_str());
+            done = false;
+        }
+    }while(!done);
+
+    return true;
+}
+
 pair<string, bool> kaiju::go(const string & board, bool red){
     auto b = steady_clock::now();
     move_node head(board, *head_);
@@ -63,7 +160,7 @@ pair<string, bool> kaiju::go(const string & board, bool red){
         return make_pair("end", false);
         
     if(head.get_kids().size() <= 1){
-        cout << head.get_kids()[0]->get_current() << endl;
+        // cout << head.get_kids()[0]->get_current() << endl;
         return make_pair(head.get_kids()[0]->get_current(), true);
     }
         
@@ -137,11 +234,11 @@ pair<string, bool> kaiju::go(const string & board, bool red){
             toeval.push_back(eight_[i]->evaluate(temp));
         }
         
-        auto temp = alphabeta_dfs(*kid, 5, -10000, 10000, true, red, 10);
+        auto temp = alphabeta_dfs(*kid, 4, -10000, 10000, true, red, 10);
         double tempscore = 0;
         
         for(int i = 0; i < kid->get_kids().size(); ++i)
-            tempscore+= kid->get_kids()[i]->get_score();
+            tempscore += kid->get_kids()[i]->get_score();
         
         kid->sort_kids();
         allinputs.push_back(tempscore);
@@ -150,13 +247,13 @@ pair<string, bool> kaiju::go(const string & board, bool red){
         kid->set_score(main_->evaluate(toeval, 1, 2, 0));
     }
     head.sort_kids();
-    auto e = steady_clock::now();
-    auto diff = e-b;
+    // auto e = steady_clock::now();
+    // auto diff = e-b;
     
-    cout << head.get_kids()[0]->get_current();
-    if(std::chrono::duration<double>(diff).count() >= 15.0)
-        cout << "!" << std::chrono::duration<double>(diff).count();
-    cout << endl;
+    // cout << head.get_kids()[0]->get_current();
+    // if(std::chrono::duration<double>(diff).count() >= 15.0)
+    //     cout << "!" << std::chrono::duration<double>(diff).count();
+    // cout << endl;
     return make_pair(head.get_kids()[0]->get_current(), true);
     
 }

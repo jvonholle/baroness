@@ -154,6 +154,7 @@ void neuralNet::evolve(const string & path, function<double(double)> evolver){
    ofstream writeNet(path.c_str());
    if(!writeNet)
       throw runtime_error("invalid filename");
+      
    
    writeNet << levels_.size() << '\n';
    for(size_t i = 0; i < levels_.size(); ++i)

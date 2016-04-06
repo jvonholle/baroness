@@ -23,7 +23,7 @@ int p_count(string board, char turn){
 }
 
 
-void play(neuralNet & red, neuralNet & black,int pc, const int turns, const string startB){
+void play(neuralNet & red, neuralNet & black,int pc, const int & turns, const string & startB){
     int t_count = 0;
     auto b = steady_clock::now();
     auto e = steady_clock::now();
@@ -113,5 +113,52 @@ void play(neuralNet & red, neuralNet & black,int pc, const int turns, const stri
     black.set_score(-1);
     red.set_score(-1);
 
+    return;
+}
+
+void play(kaiju & red, kaiju & black, int pc, const int & turns, const string & startB){
+    int t_count = 0;
+    vector<string> game;
+    game.push_back(startB);
+    while(t_count < turns){
+        
+        if(pc == 1)
+            cout << game[t_count] << endl;
+        
+        auto results = black.go(game[t_count], false);
+        
+        if(results.second){
+            game.push_back(results.first);
+            t_count++;
+        }else{
+            black.set_score(-3);
+            red.set_score(3);
+            if(pc == 0 || pc == 1){
+                cout << "red wins." << endl;
+            }
+            return;
+        }
+        
+        if(pc == 1)
+            cout << game[t_count] << endl;
+            
+        results = red.go(game[t_count], true);
+        
+        if(results.second){
+            game.push_back(results.first);
+            t_count++;
+        }else{
+            black.set_score(3);
+            red.set_score(-3);
+            if(pc == 0 || pc == 1){
+                cout << "black wins." << endl;
+            }
+            return;
+        }
+    }
+    
+    cout << "draw." << endl;
+    red.set_score(-1);
+    black.set_score(-1);
     return;
 }

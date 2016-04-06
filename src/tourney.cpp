@@ -28,12 +28,14 @@ double evolutionize(const double & W){
     return newWeight(rand);
 }
 
-string rstartB(bool red, string s_board = "rrrrrrrrrrrr________bbbbbbbbbbbb"){
+string rstartB(){
     random_device d;
     mt19937 rand(d());
-    auto boards = getBoardsN({s_board},red);
+    auto boards = getBoardsN({"rrrrrrrrrrrr________bbbbbbbbbbbb"},true);
     auto p_board = std::uniform_int_distribution<>(0, (boards.size()-1));
-    return(boards[p_board(rand)]);
+    boards = getBoardsN({boards[p_board(rand)]},false);
+    p_board = std::uniform_int_distribution<>(0, (boards.size()-1));
+    return boards[p_board(rand)];
 }
 
 
@@ -67,13 +69,10 @@ pair<int, vector<neuralNet> > single(vector<neuralNet> & nets, const int & gen, 
     auto diff = e - b;
 
     while(net_i < net_j){
-        string temp = rstartB(false);
-        temp = rstartB(true, temp); 
 
-
-        play(nets[r_net[net_i]], nets[r_net[net_j]], print_check, 200, temp);
+        play(nets[r_net[net_i]], nets[r_net[net_j]], print_check, 200, rstartB());
        
-        play(nets[r_net[net_j]], nets[r_net[net_i]], print_check, 200, temp);
+        play(nets[r_net[net_j]], nets[r_net[net_i]], print_check, 200, rstartB());
 
         int temp_int = (net_i * net_j +13 / 4);
         if(temp_int % 2 == 0)
@@ -111,4 +110,31 @@ pair<int, vector<neuralNet> > single(vector<neuralNet> & nets, const int & gen, 
             rNets.push_back(worthy[i]);
 
     return make_pair(off_count, rNets);
+}
+
+vector<int> monsterfight(vector<kaiju> & monsters, const int & print_check){
+    for(int i = 0; i < monsters.size(); ++i)
+        monsters[i].evolve(i, [&] (double a) {return a;});
+        
+    vector<int> count;    
+    random_device d;
+    mt19937 rand(d());
+    std::shuffle(monsters.begin(), monsters.end(), rand);
+    
+    int count_up = 0;
+    int count_down = monsters.size() - 1;
+    
+    while(count_up < count_down){
+        play(monsters[count_up], monsters[count_down], print_check, 200, rstartB());
+        play(monsters[count_down], monsters[count_up], print_check, 200 , rstartB());
+        play(monsters[count_up], monsters[count_down], print_check, 200);
+        play(monsters[count_down], monsters[count_up], print_check, 200);
+    }
+    
+    for(int i = 0; i < monsters.size(); ++i){
+        if(monsters[i].evolve(i, evolutionize))
+            count.push_back(i);
+    }
+    
+    return count;
 }

@@ -79,7 +79,7 @@ void load(vector<neuralNet> & nets, const int & check, const int & quant){
     }
 }
 
-int main(){
+void train_nets(){
     vector<neuralNet> nets;
     vector<double> startW;
     string filepath = "out";
@@ -149,5 +149,67 @@ int main(){
             << "survivors: " << count.second.size() << endl;
         gen++;
     }
-    return 0;
+}
+
+void train_kaiju(){
+    vector<kaiju> monsters;
+    int check;
+    int pop_count;
+    int gen_count = 0;
+    vector<int> number_of_offspring;
+    cout << "1 for new random, 0 to load" << endl << "> ";
+    std::cin >> check;
+    if(check == 0){
+        cout << "load how many?" << endl << "> ";
+        std::cin >> pop_count;
+        for(int i = 0; i < pop_count; ++i)
+            monsters.push_back(kaiju(i));
+        cout << "done loading." << endl;
+    }else if(check == 1){
+        cout << "make how many?" << endl << "> ";
+        std::cin >> pop_count;
+        for(int i = 0; i < pop_count; ++i)
+            monsters.push_back(kaiju('s'));
+        cout << "done random generation." << endl;
+    }else{
+        cout << "that wasn't a valid number." << endl;
+        return;
+    }
+    
+    cout << "1 for printed turns, 0 for match outcome only" << endl << "> ";
+    std::cin >> check;
+    while(true){
+        cout << "starting gen " << gen_count << endl;
+        auto b = steady_clock::now();
+        
+        number_of_offspring = monsterfight(monsters, check);
+        
+        for(int i = 0; i < number_of_offspring.size(); ++i)
+            monsters.push_back(kaiju(number_of_offspring[i]));
+        
+        if(number_of_offspring.size() + monsters.size() < pop_count){
+            for(int i = 0; i < pop_count - (number_of_offspring.size() + monsters.size()); ++i){
+                monsters.push_back(kaiju('s'));
+            }
+        }
+        
+        auto e = steady_clock::now();
+        auto diff = e - b; 
+        cout << "gen: " << gen_count << " done" << endl
+            << "time: " << ((std::chrono::duration<double>(diff).count()/60)/60) << " hours" << endl;
+        gen_count++;
+    }
+ return;
+}
+
+int main(){
+    int check;
+    cout << "1 for nets 0 for kaiju" << endl << "> ";
+    std::cin >> check;
+    if(check == 1)
+        train_nets();
+    else if(check == 0)
+        train_kaiju();
+    else
+        return 0;
 }
