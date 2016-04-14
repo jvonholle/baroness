@@ -166,6 +166,7 @@ void doublelim(vector<kaiju> & monsters){
     
     vector<int> winbracket;
     vector<int> losebracket;
+    pair<int, int> gfinal;
     
     int count_up = 0;
     int count_down = monsters.size() - 1;
@@ -229,11 +230,14 @@ void doublelim(vector<kaiju> & monsters){
         losebracket.clear();
         
         if(keep.size() == 1){
-            winbracket.push_back(keep[0]);
+            gfinal.first = keep[0];
         }else{
             for(int i = 0; i < keep.size(); ++i)
                 losebracket.push_back(keep[i]);
         }
+            
+        for(int i = 0; i < monsters.size(); ++i)
+            monsters[i].reset_score();
             
         keep.clear();
         count_up = 0;
@@ -263,14 +267,38 @@ void doublelim(vector<kaiju> & monsters){
         }
         
         winbracket.clear();
-        
-        for(int i =0; i < keep.size(); ++i)
-            winbracket.push_back(keep[i]);
+        if(keep.size() == 1){
+            gfinal.second = keep[0];
+        }else{
+            for(int i =0; i < keep.size(); ++i)
+                winbracket.push_back(keep[i]);
+        }
             
         keep.clear();
     }
-    cout << "done! " << winbracket[0] << " is the champion, find him in folder kaiju666" << endl;
-    monsters[winbracket[0]].evolve(666, [&](double a){return a;}, -100);
+    
+    for(int i = 0; i < monsters.size(); ++i)
+            monsters[i].reset_score();
+    
+    cout << "Grand Final! " << gfinal.first << " V " << gfinal.second << endl;
+    int champ;
+    play(monsters[gfinal.first], monsters[count_down], print_check, 200);
+    play(monsters[gfinal.second], monsters[gfinal.first], print_check, 200);
+    
+    while(monsters[gfinal.first].get_score() == monsters[gfinal.second].get_score()){
+       auto pcheck = std::uniform_int_distribution<>(0, 99);
+        if(pcheck(rand)%2 == 0)
+            play(monsters[gfinal.first], monsters[gfinal.second], print_check, 200);
+        else
+            play(monsters[gfinal.second], monsters[gfinal.first], print_check, 200);
+    }
+    if(monsters[gfinal.first].get_score() > monsters[gfinal.second].get_score())
+        champ = gfinal.first;
+    else
+        champ = gfinal.second;
+        
+    cout << "done! " << champ << " is the champion, find him in folder kaiju666" << endl;
+    monsters[champ].evolve(666, [&](double a){return a;}, -100);
 }
 
 void doublelim(vector<neuralNet> & nets){
