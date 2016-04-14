@@ -70,6 +70,8 @@ public:
     //used to make scoring more thread safe
     int get_score(){
         return score;}
+    void reset_score(){
+        score = 0;}
 
 private:
     

@@ -109,10 +109,13 @@ pair<int, vector<neuralNet> > single(vector<neuralNet> & nets, const int & gen, 
         if(worthy[i].get_score() > mean)
             rNets.push_back(worthy[i]);
 
+    for(int i = 0; i < rNets.size(); ++i)
+        rNets[i].reset_score();
+
     return make_pair(off_count, rNets);
 }
 
-vector<int> monsterfight(vector<kaiju> & monsters, const int & print_check){
+pair<vector<int>, vector<kaiju> > monsterfight(vector<kaiju> & monsters, const int & print_check){
     for(int i = 0; i < monsters.size(); ++i)
         monsters[i].evolve(i, [&] (double a) {return a;});
         
@@ -125,16 +128,31 @@ vector<int> monsterfight(vector<kaiju> & monsters, const int & print_check){
     int count_down = monsters.size() - 1;
     
     while(count_up < count_down){
+        cout << "set: " << count_up << endl;
         play(monsters[count_up], monsters[count_down], print_check, 200, rstartB());
         play(monsters[count_down], monsters[count_up], print_check, 200 , rstartB());
         play(monsters[count_up], monsters[count_down], print_check, 200);
         play(monsters[count_down], monsters[count_up], print_check, 200);
+
+        count_up++;
+        count_down--;
     }
-    
-    for(int i = 0; i < monsters.size(); ++i){
-        if(monsters[i].evolve(i, evolutionize))
+
+    for(int i = 0; i < monsters.size(); ++i)
+        if(monsters[i].evolve(i, evolutionize, 1))
             count.push_back(i);
-    }
-    
-    return count;
+
+    int total = 0;
+    for(int i = 0; i < count.size(); ++i)
+        total += monsters[count[i]].get_score();
+
+    int mean = total / count.size();
+
+    vector<kaiju> worthy;
+    for(int i = 0; i < count.size(); ++i)
+        if(monsters[count[i]].get_score() >= mean)
+            worthy.push_back(move(monsters[count[i]]));
+
+
+    return make_pair(count, move(worthy));
 }

@@ -15,9 +15,12 @@ class kaiju{
     bool evolve(const int & count, function<double(double)> evolver, const int & cuttoff = 0);
     
     void set_score(const int & i){
-        score_ = i;}
+        score_ += i;}
     int get_score(){
         return score_;}
+    void reset_score(){
+        score_ = 0;
+    }
     private:
     vector<unique_ptr<neuralNet>> eight_;
     vector<unique_ptr<neuralNet>> four_;

@@ -156,7 +156,6 @@ void train_kaiju(){
     int check;
     int pop_count;
     int gen_count = 0;
-    vector<int> number_of_offspring;
     cout << "1 for new random, 0 to load" << endl << "> ";
     std::cin >> check;
     if(check == 0){
@@ -164,13 +163,15 @@ void train_kaiju(){
         std::cin >> pop_count;
         for(int i = 0; i < pop_count; ++i)
             monsters.push_back(kaiju(i));
-        cout << "done loading." << endl;
+        cout << "done loading." << endl
+             << "loaded: " << monsters.size() << endl;
     }else if(check == 1){
         cout << "make how many?" << endl << "> ";
         std::cin >> pop_count;
         for(int i = 0; i < pop_count; ++i)
             monsters.push_back(kaiju('s'));
-        cout << "done random generation." << endl;
+        cout << "done random generation." << endl
+             << "made: " << monsters.size() << endl;
     }else{
         cout << "that wasn't a valid number." << endl;
         return;
@@ -182,21 +183,32 @@ void train_kaiju(){
         cout << "starting gen " << gen_count << endl;
         auto b = steady_clock::now();
         
-        number_of_offspring = monsterfight(monsters, check);
-        
-        for(int i = 0; i < number_of_offspring.size(); ++i)
-            monsters.push_back(kaiju(number_of_offspring[i]));
-        
-        if(number_of_offspring.size() + monsters.size() < pop_count){
-            for(int i = 0; i < pop_count - (number_of_offspring.size() + monsters.size()); ++i){
-                monsters.push_back(kaiju('s'));
-            }
+        auto results = monsterfight(monsters, check);
+        monsters.clear();
+
+        monsters = move(results.second);
+
+        cout << endl << monsters.size() << endl;
+
+        for(int i = 0; i < results.first.size(); ++i)
+            monsters.push_back(kaiju(results.first[i]));
+
+        cout << endl << monsters.size() << endl;
+
+        if(monsters.size() < pop_count){
+           for(int i = monsters.size(); i < (pop_count); ++i)
+               monsters.push_back(kaiju('s'));
         }
+
+
+        cout << endl << monsters.size() << endl;
+
         
         auto e = steady_clock::now();
         auto diff = e - b; 
         cout << "gen: " << gen_count << " done" << endl
-            << "time: " << ((std::chrono::duration<double>(diff).count()/60)/60) << " hours" << endl;
+            << "time: " << ((std::chrono::duration<double>(diff).count()/60)/60) << " hours" << endl
+            << "monsters: " << monsters.size() << endl;
         gen_count++;
     }
  return;
