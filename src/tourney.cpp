@@ -169,6 +169,9 @@ void doublelim(vector<kaiju> & monsters){
     
     int count_up = 0;
     int count_down = monsters.size() - 1;
+    
+    cout << "1 for printed turns, 0 for match outcome only" << endl << "> ";
+    std::cin >> print_check;
         
     cout << "starting first round!" << endl;    
     while(count_up < count_down){
