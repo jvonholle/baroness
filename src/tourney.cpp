@@ -156,3 +156,151 @@ pair<vector<int>, vector<kaiju> > monsterfight(vector<kaiju> & monsters, const i
 
     return make_pair(count, move(worthy));
 }
+
+
+void doublelim(vector<kaiju> & monsters){
+    int print_check = 1;
+    random_device d;
+    mt19937 rand(d());
+    std::shuffle(monsters.begin(), monsters.end(), rand);
+    
+    vector<int> winbracket;
+    vector<int> losebracket;
+    
+    int count_up = 0;
+    int count_down = monsters.size() - 1;
+        
+    cout << "starting first round!" << endl;    
+    while(count_up < count_down){
+        play(monsters[count_up], monsters[count_down], print_check, 200);
+        play(monsters[count_down], monsters[count_up], print_check, 200);
+        
+        if(monsters[count_up].get_score() == monsters[count_down].get_score()){
+            auto pcheck = std::uniform_int_distribution<>(0, 99);
+            if(pcheck(rand)%2 == 0)
+                play(monsters[count_down], monsters[count_up], print_check, 200);
+            else
+                play(monsters[count_up], monsters[count_down], print_check, 200);
+        }
+        if(monsters[count_up].get_score() > monsters[count_down].get_score()){
+            winbracket.push_back(count_up);
+            losebracket.push_back(count_down);
+        }else{
+            winbracket.push_back(count_down);
+            losebracket.push_back(count_up);
+        }
+        
+        count_up++;
+        count_down--;
+    }
+        
+    
+    while(winbracket.size() > 1){
+        count_up = 0;
+        count_down = losebracket.size() - 1;
+        
+        for(int i = 0; i < monsters.size(); ++i)
+            monsters[i].reset_score();
+        
+        vector<int> keep;
+        cout << "starting losers bracket, " << losebracket.size() << " fighters" << endl;
+        while(count_up < count_down){
+            play(monsters[losebracket[count_up]], monsters[losebracket[count_down]], print_check, 200);
+            play(monsters[losebracket[count_down]], monsters[losebracket[count_up]], print_check, 200);
+            
+            while(monsters[losebracket[count_up]].get_score() == monsters[losebracket[count_down]].get_score()){
+                auto pcheck = std::uniform_int_distribution<>(0, 99);
+                if(pcheck(rand)%2 == 0)
+                    play(monsters[losebracket[count_up]], monsters[losebracket[count_down]], print_check, 200);
+                else
+                    play(monsters[losebracket[count_down]], monsters[losebracket[count_up]], print_check, 200);
+            }
+            if(monsters[losebracket[count_up]].get_score() > monsters[losebracket[count_down]].get_score())
+                keep.push_back(losebracket[count_up]);
+            else
+                keep.push_back(losebracket[count_down]);
+            
+            count_up++;
+            count_down--;
+        }
+        losebracket.clear();
+        
+        if(keep.size() == 1){
+            winbracket.push_back(keep[0]);
+        }else{
+            for(int i = 0; i < keep.size(); ++i)
+                losebracket.push_back(keep[i]);
+        }
+            
+        keep.clear();
+        count_up = 0;
+        count_down = winbracket.size() - 1;
+        
+        cout << "starting winner's bracket, " << winbracket.size() << " fighers" << endl;
+        while(count_up < count_down){
+            play(monsters[winbracket[count_up]], monsters[winbracket[count_down]], print_check, 200);
+            play(monsters[winbracket[count_down]], monsters[winbracket[count_up]], print_check, 200);
+            
+            while(monsters[winbracket[count_up]].get_score() == monsters[winbracket[count_down]].get_score()){
+               auto pcheck = std::uniform_int_distribution<>(0, 99);
+                if(pcheck(rand)%2 == 0)
+                    play(monsters[winbracket[count_up]], monsters[winbracket[count_down]], print_check, 200);
+                else
+                    play(monsters[winbracket[count_down]], monsters[winbracket[count_up]], print_check, 200);
+            }
+            if(monsters[winbracket[count_up]].get_score() > monsters[winbracket[count_down]].get_score()){
+                keep.push_back(winbracket[count_up]);
+                losebracket.push_back(winbracket[count_down]);
+            }else{
+                keep.push_back(winbracket[count_down]);
+                losebracket.push_back(winbracket[count_up]);
+            }
+            count_up++;
+            count_down--;
+        }
+        
+        winbracket.clear();
+        
+        for(int i =0; i < keep.size(); ++i)
+            winbracket.push_back(keep[i]);
+            
+        keep.clear();
+    }
+    cout << "done! " << winbracket[0] << " is the champion, find him in folder kaiju666" << endl;
+    monsters[winbracket[0]].evolve(666, [&](double a){return a;}, -100);
+}
+
+void doublelim(vector<neuralNet> & nets){
+    int print_check = 0;
+    random_device d;
+    mt19937 rand(d());
+    std::shuffle(nets.begin(), nets.end(), rand);
+    
+    vector<int> winbracket;
+    vector<int> losebracket;
+    
+    int count_up = 0;
+    int count_down = nets.size() - 1;
+    
+    while(count_up < count_down){
+        play(nets[count_down], nets[count_up], print_check, 200);
+        play(nets[count_up], nets[count_down], print_check, 200);
+        
+        if(nets[count_up].get_score() == nets[count_down].get_score()){
+            auto pcheck = std::uniform_int_distribution<>(0, 99);
+            if(pcheck(rand)%2 == 0)
+                play(nets[count_down], nets[count_up], print_check, 200);
+            else
+                play(nets[count_up], nets[count_down], print_check, 200);
+        }
+        if(nets[count_up].get_score() > nets[count_down].get_score()){
+            winbracket.push_back(count_up);
+            losebracket.push_back(count_down);
+        }else{
+            winbracket.push_back(count_down);
+            losebracket.push_back(count_up);
+        }
+        count_up++;
+        count_down--;
+    }
+}

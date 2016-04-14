@@ -12,4 +12,8 @@ pair<int, vector<neuralNet> > single(vector<neuralNet> & nets, const int & gen, 
 
 pair<vector<int>, vector<kaiju> > monsterfight(vector<kaiju> & monsters, const int & print_check = 0);
 
+void doublelim(vector<kaiju> & monsters);
+
+void doublelim(vector<neuralNet> & nets);
+
 #endif

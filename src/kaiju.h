@@ -28,5 +28,5 @@ class kaiju{
     unique_ptr<neuralNet> main_;
     unique_ptr<neuralNet> allinput_;
     int score_ = 0;
-};
+};      
 
