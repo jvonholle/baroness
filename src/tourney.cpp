@@ -297,22 +297,25 @@ void doublelim(vector<kaiju> & monsters){
     else
         champ = gfinal.second;
         
-    cout << "done! " << champ << " is the champion, find him in folder kaiju666" << endl;
+    cout << "done! " << champ << " is the champion, find him in kaiju/666" << endl;
     monsters[champ].evolve(666, [&](double a){return a;}, -100);
 }
 
 void doublelim(vector<neuralNet> & nets){
-    int print_check = 0;
+    int print_check;
     random_device d;
     mt19937 rand(d());
     std::shuffle(nets.begin(), nets.end(), rand);
     
     vector<int> winbracket;
     vector<int> losebracket;
+    pair<int, int> gfinal;
     
     int count_up = 0;
     int count_down = nets.size() - 1;
     
+    cout << "1 for printed turns, 0 for match outcome\n > ";
+    std::cin >> print_check;
     while(count_up < count_down){
         play(nets[count_down], nets[count_up], print_check, 200);
         play(nets[count_up], nets[count_down], print_check, 200);
@@ -334,4 +337,107 @@ void doublelim(vector<neuralNet> & nets){
         count_up++;
         count_down--;
     }
+
+    while(winbracket.size() > 1){
+        count_up = 0;
+        count_down = losebracket.size() - 1;
+
+        for(int i = 0; i < nets.size(); ++i)
+            nets[i].reset_score();
+
+        vector<int> keep;
+
+        cout << "start loser bracket, " << losebracket.size() << " fighters" << endl;
+        while(count_up < count_down){
+            play(nets[losebracket[count_up]], nets[losebracket[count_down]], print_check, 200);
+            play(nets[losebracket[count_down]], nets[losebracket[count_up]], print_check, 200);
+
+            while(nets[losebracket[count_up]].get_score() == nets[losebracket[count_down]].get_score()){
+                auto pcheck = std::uniform_int_distribution<>(0,99);
+                if(pcheck(rand)%2 == 0)
+                    play(nets[losebracket[count_up]], nets[losebracket[count_down]], print_check, 200);
+                else
+                    play(nets[losebracket[count_down]], nets[losebracket[count_up]], print_check, 200);
+            }
+            if(nets[losebracket[count_up]].get_score() < nets[losebracket[count_down]].get_score())
+                keep.push_back(losebracket[count_down]);
+            else
+                keep.push_back(losebracket[count_up]);
+
+            count_up++;
+            count_down--;
+        }
+        losebracket.clear();
+
+        if(keep.size() == 1){
+            gfinal.first = keep[0];
+        }else{
+            for(int i = 0; i < keep.size(); ++i)
+                losebracket.push_back(keep[i]);
+        }
+
+        for(int i = 0; i < nets.size(); ++i)
+            nets[i].reset_score();
+
+        keep.clear();
+        count_up = 0;
+        count_down = winbracket.size() - 1;
+
+        cout << "start win bracket " << winbracket.size() << " fighters" << endl;
+        while(count_up < count_down){
+            play(nets[winbracket[count_up]], nets[winbracket[count_down]], print_check, 200);
+            play(nets[winbracket[count_down]], nets[winbracket[count_up]], print_check, 200);
+
+            while(nets[winbracket[count_up]].get_score() == nets[winbracket[count_down]].get_score()){
+                auto pcheck = std::uniform_int_distribution<>(0,99);
+                if(pcheck(rand)%2 == 0)
+                    play(nets[winbracket[count_up]], nets[winbracket[count_down]], print_check, 200);
+                else
+                    play(nets[winbracket[count_down]], nets[winbracket[count_up]], print_check, 200);
+            }
+            if(nets[winbracket[count_up]].get_score() < nets[winbracket[count_down]].get_score()){
+                keep.push_back(winbracket[count_down]);
+                losebracket.push_back(winbracket[count_up]);
+            }else{
+                keep.push_back(winbracket[count_up]);
+                losebracket.push_back(winbracket[count_down]);
+
+            }
+            count_up++;
+            count_down--;
+        }
+
+        winbracket.clear();
+        if(keep.size() ==1){
+            gfinal.second = keep[0];
+        }else{
+            for(int i = 0; i < nets.size(); ++i)
+                nets[i].reset_score();
+        }
+
+        keep.clear();
+    }
+
+    for(int i = 0; i < nets.size(); ++i)
+        nets[i].reset_score();
+
+    cout << "grandfinal: " << gfinal.first << " V " << gfinal.second << endl;
+    int champ;
+    play(nets[gfinal.first], nets[gfinal.second], print_check, 200);
+    play(nets[gfinal.second], nets[gfinal.first], print_check, 200);
+
+    while(nets[gfinal.first].get_score() == nets[gfinal.second].get_score()){
+        auto pcheck = std::uniform_int_distribution<>(0,99);
+        if(pcheck(rand)%2 == 0)
+            play(nets[gfinal.second], nets[gfinal.first], print_check, 200);
+        else
+            play(nets[gfinal.first], nets[gfinal.second], print_check, 200);
+    }
+    if(nets[gfinal.first].get_score() > nets[gfinal.second].get_score())
+        champ = gfinal.first;
+    else
+        champ = gfinal.second;
+
+    cout << "champ is " << champ << endl;
+    nets[champ].evolve("champ", [&](double a){return a;});
 }

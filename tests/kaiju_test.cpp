@@ -1,7 +1,7 @@
-#include "kaiju.h"
-#include <random>
-using std::random_device;
-using std::mt19937;
+#include "../src/kaiju.h"
+//#include <random>
+//using std::random_device;
+//using std::mt19937;
 #include <algorithm>
 #include <iostream>
 using std::cout;
@@ -13,21 +13,23 @@ int main(){
     vector<double> startW;
     vector<string> game;
     
-    random_device rd;
-    mt19937 randomG(rd());
+//    random_device rd;
+//    mt19937 randomG(rd());
     int t_count = 0;
-    auto d = std::uniform_real_distribution<> (-1,1);
+//    auto d = std::uniform_real_distribution<> (-1,1);
     bool valid;
     double redscore =0;
     double blackscore =0;
-    for(int i = 0; i < 10; ++i){
-        for(int j = 0; j < 3700; ++j)
-        startW.push_back(d(randomG));
+//    for(int i = 0; i < 10; ++i){
+//        for(int j = 0; j < 3700; ++j)
+//            startW.push_back(d(randomG));
     
-        neuralNet red({32, 40, 40, 20, 1}, startW);
+//        neuralNet red({32, 40, 40, 20, 1}, startW);
         startW.clear();
+
+        kaiju red('l');
             
-        kaiju black(4);
+        kaiju black('j');
         t_count =0;
         game.clear();
         game.push_back("rrrrrrrrrrrr________bbbbbbbbbbbb");
@@ -77,7 +79,7 @@ int main(){
                 break;
             }
         }  
-    }
+    //}
     
     cout << "black won: " << blackscore << " red won: " << redscore << ", which is " << blackscore/(redscore+blackscore) << "\%" << endl;
     return 0;

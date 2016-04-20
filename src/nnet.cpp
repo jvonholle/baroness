@@ -23,14 +23,14 @@ using std::make_pair;
 #include <vector>
 using std::vector;
 
-//debug -- remove later --
+//debug
 #include <iostream>
 using std::cout;
 using std::endl;
 //end debug
 
 
-vector<double> deString(string board, bool red, double king){
+vector<double> deString(const string & board, bool red, double king){
     vector<double> rvec;
     if(red){
         for(int i = 0; i < board.length(); ++i){

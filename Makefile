@@ -17,7 +17,7 @@ noc_ab: tests/ab_vs_mm_test_no_catch.cpp
 testmini: tests/minimax_test.cpp
 	g++ -std=c++11 tests/minimax_test.cpp src/minimax.cpp src/minimax.h src/nnet.h src/nnet.cpp src/movement.h src/movement.cpp -o baroness_test
 kaiju: tests/kaiju_test.cpp
-	g++ -O3 -Ofast -std=c++11 tests/kaiju.cpp tests/kaiju.h tests/kaiju_test.cpp src/nnet.h src/nnet.cpp src/minimax.cpp src/minimax.h src/movement.cpp src/movement.h -o baroness_test
+	g++ -O3 -Ofast -std=c++11 src/kaiju.cpp src/kaiju.h tests/kaiju_test.cpp src/nnet.h src/nnet.cpp src/minimax.cpp src/minimax.h src/movement.cpp src/movement.h -o baroness_test
 
 
 #Play checkers

@@ -255,5 +255,4 @@ pair<string, bool> kaiju::go(const string & board, bool red){
     //     cout << "!" << std::chrono::duration<double>(diff).count();
     // cout << endl;
     return make_pair(head.get_kids()[0]->get_current(), true);
-    
 }
