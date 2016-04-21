@@ -7,8 +7,12 @@ using std::pair;
 #include <string>
 using std::string;
 
-void play(neuralNet & red, neuralNet & black,int pc, const int & turns = 100, const string & startB ="rrrrrrrrrrrr________bbbbbbbbbbbb");
+void play(neuralNet & red, neuralNet & black,int pc, const int & turns = 200, const string & startB ="rrrrrrrrrrrr________bbbbbbbbbbbb");
 
-void play(kaiju & red, kaiju & black, int pc, const int & turns = 100, const string & startB = "rrrrrrrrrrrr________bbbbbbbbbbbb" );
+void play(kaiju & red, kaiju & black, int pc, const int & turns = 200, const string & startB = "rrrrrrrrrrrr________bbbbbbbbbbbb" );
+
+void play(kaiju & red, neuralNet & black, int pc, const int & turns = 200, const string & startB = "rrrrrrrrrrrr________bbbbbbbbbbbb" );
+
+void play(neuralNet & red, kaiju & black, int pc, const int & turns = 200, const string & startB = "rrrrrrrrrrrr________bbbbbbbbbbbb" );
 
 #endif
